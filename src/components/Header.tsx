@@ -13,10 +13,10 @@ export default function Header() {
             <div className="absolute -top-1 -right-1 w-2.5 h-2.5 sm:w-3 sm:h-3 bg-neon-green rounded-full animate-pulse-neon" />
           </div>
           <div className="min-w-0">
-            <h1 className="text-base sm:text-lg font-bold bg-gradient-to-r from-neon-green to-electric-blue bg-clip-text text-transparent truncate">
+            <h1 className="text-lg sm:text-xl font-bold bg-gradient-to-r from-neon-green to-electric-blue bg-clip-text text-transparent truncate">
               TOP WORLD PREMIUM
             </h1>
-            <p className="text-[9px] sm:text-[10px] text-gray-500 tracking-widest uppercase">
+            <p className="text-[11px] sm:text-xs text-gray-500 tracking-widest uppercase">
               Inteligência Preditiva
             </p>
           </div>

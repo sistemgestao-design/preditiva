@@ -29,7 +29,7 @@ export default function OddsComparison({ odds, homeShort, awayShort }: OddsCompa
         onClick={() => setExpanded(!expanded)}
         className="w-full flex items-center justify-between py-2 px-3 rounded-lg bg-grafite-700/50 hover:bg-grafite-700 transition-colors mb-2"
       >
-        <span className="text-[10px] font-bold text-electric-blue uppercase tracking-wider flex items-center gap-1.5">
+        <span className="text-xs font-bold text-electric-blue uppercase tracking-wider flex items-center gap-1.5">
           📊 Comparar Odds — 10 Casas do Brasil
         </span>
         {expanded ? (
@@ -42,10 +42,10 @@ export default function OddsComparison({ odds, homeShort, awayShort }: OddsCompa
       <div className="overflow-x-auto">
         {/* Table Header */}
         <div className="grid grid-cols-[1fr_50px_50px_50px] sm:grid-cols-[1fr_60px_60px_60px] gap-1 px-2 mb-1 min-w-0">
-          <span className="text-[9px] text-gray-600 uppercase">Casa</span>
-          <span className="text-[9px] text-gray-600 uppercase text-center">{homeShort}</span>
-          <span className="text-[9px] text-gray-600 uppercase text-center">Emp</span>
-          <span className="text-[9px] text-gray-600 uppercase text-center">{awayShort}</span>
+          <span className="text-xs text-gray-600 uppercase">Casa</span>
+          <span className="text-xs text-gray-600 uppercase text-center">{homeShort}</span>
+          <span className="text-xs text-gray-600 uppercase text-center">Emp</span>
+          <span className="text-xs text-gray-600 uppercase text-center">{awayShort}</span>
         </div>
 
         {/* Rows */}
@@ -61,7 +61,7 @@ export default function OddsComparison({ odds, homeShort, awayShort }: OddsCompa
             >
               <div className="flex items-center gap-1.5 min-w-0">
                 <span className="text-sm">{odd.logo}</span>
-                <span className={`text-[11px] font-medium truncate ${odd.isBest ? 'text-neon-green' : 'text-gray-300'}`}>
+                <span className={`text-sm font-medium truncate ${odd.isBest ? 'text-neon-green' : 'text-gray-300'}`}>
                   {odd.house}
                 </span>
                 {odd.isBest && <Crown className="w-3 h-3 text-gold flex-shrink-0" />}
@@ -72,13 +72,13 @@ export default function OddsComparison({ odds, homeShort, awayShort }: OddsCompa
                   </span>
                 )}
               </div>
-              <span className={`text-xs font-bold text-center ${odd.homeOdd === bestHome ? 'text-neon-green' : 'text-gray-300'}`}>
+              <span className={`text-sm font-bold text-center ${odd.homeOdd === bestHome ? 'text-neon-green' : 'text-gray-300'}`}>
                 {odd.homeOdd.toFixed(2)}
               </span>
-              <span className={`text-xs font-bold text-center ${odd.drawOdd === bestDraw ? 'text-neon-green' : 'text-gray-300'}`}>
+              <span className={`text-sm font-bold text-center ${odd.drawOdd === bestDraw ? 'text-neon-green' : 'text-gray-300'}`}>
                 {odd.drawOdd.toFixed(2)}
               </span>
-              <span className={`text-xs font-bold text-center ${odd.awayOdd === bestAway ? 'text-neon-green' : 'text-gray-300'}`}>
+              <span className={`text-sm font-bold text-center ${odd.awayOdd === bestAway ? 'text-neon-green' : 'text-gray-300'}`}>
                 {odd.awayOdd.toFixed(2)}
               </span>
             </div>
@@ -88,7 +88,7 @@ export default function OddsComparison({ odds, homeShort, awayShort }: OddsCompa
         {!expanded && odds.length > 4 && (
           <button
             onClick={() => setExpanded(true)}
-            className="w-full mt-1 py-1.5 text-[10px] text-electric-blue hover:text-electric-blue/80 transition-colors"
+            className="w-full mt-1 py-1.5 text-xs text-electric-blue hover:text-electric-blue/80 transition-colors"
           >
             + {odds.length - 4} casas de apostas
           </button>

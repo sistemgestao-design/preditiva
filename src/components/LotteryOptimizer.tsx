@@ -62,11 +62,11 @@ export default function LotteryOptimizer({ lottery }: LotteryOptimizerProps) {
 
   return (
     <div className="bg-grafite-800 rounded-2xl border border-grafite-600 p-4">
-      <h3 className="text-sm font-bold text-white flex items-center gap-2 mb-1">
+      <h3 className="text-base font-bold text-white flex items-center gap-2 mb-1">
         <Wand2 className="w-4 h-4 text-gold" />
         Otimizador Quântico — {lottery.name}
       </h3>
-      <p className="text-[10px] text-gray-500 mb-4">
+      <p className="text-xs text-gray-500 mb-4">
         Selecione {lottery.pickCount}+ números da sorte e a IA gera o fechamento matemático perfeito
       </p>
 
@@ -94,14 +94,14 @@ export default function LotteryOptimizer({ lottery }: LotteryOptimizerProps) {
       </div>
 
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-2">
-        <span className="text-[10px] text-gray-500">
+        <span className="text-xs text-gray-500">
           {userNumbers.length} selecionados · Mínimo: {lottery.pickCount}
         </span>
         <div className="flex gap-2 w-full sm:w-auto justify-end">
           {userNumbers.length > 0 && (
             <button
               onClick={() => { setUserNumbers([]); setOptimizedGames([]); }}
-              className="px-3 py-1.5 rounded-lg bg-grafite-700 text-gray-400 text-xs hover:bg-grafite-600 transition-colors"
+              className="px-3 py-1.5 rounded-lg bg-grafite-700 text-gray-400 text-sm hover:bg-grafite-600 transition-colors"
             >
               Limpar
             </button>
@@ -109,7 +109,7 @@ export default function LotteryOptimizer({ lottery }: LotteryOptimizerProps) {
           <button
             onClick={optimizeGame}
             disabled={userNumbers.length < lottery.pickCount || isOptimizing}
-            className={`px-4 py-2 rounded-xl flex items-center gap-2 text-xs font-bold transition-all ${
+            className={`px-4 py-2 rounded-xl flex items-center gap-2 text-sm font-bold transition-all ${
               userNumbers.length >= lottery.pickCount
                 ? 'bg-gradient-to-r from-gold to-orange-500 text-grafite-900 hover:shadow-[0_0_20px_rgba(255,215,0,0.3)]'
                 : 'bg-grafite-700 text-gray-500 cursor-not-allowed'

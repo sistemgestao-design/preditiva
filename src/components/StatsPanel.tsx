@@ -42,11 +42,11 @@ export default function StatsPanel() {
       <div className="bg-grafite-800 rounded-2xl border border-grafite-600 overflow-hidden">
         {/* Header */}
         <div className="px-4 py-3 bg-grafite-700/50 border-b border-grafite-600">
-          <h2 className="text-sm font-bold text-white flex items-center gap-2">
+          <h2 className="text-base font-bold text-white flex items-center gap-2">
             <BarChart3 className="w-4 h-4 text-electric-blue" />
             Painel de Performance da IA
           </h2>
-          <p className="text-[10px] text-gray-500 mt-0.5">
+          <p className="text-xs text-gray-500 mt-0.5">
             Estatísticas baseadas nos últimos 30 dias de análise
           </p>
         </div>
@@ -55,34 +55,34 @@ export default function StatsPanel() {
         <div className="grid grid-cols-3 gap-1.5 sm:gap-2 p-2 sm:p-3">
           <div className="bg-grafite-700 rounded-xl p-3 text-center">
             <Zap className="w-4 h-4 text-electric-blue mx-auto mb-1" />
-            <p className="text-base sm:text-lg font-bold text-white">{globalStats.totalAnalyzed}</p>
-            <p className="text-[8px] sm:text-[9px] text-gray-500 uppercase">Jogos Analisados</p>
+            <p className="text-lg sm:text-xl font-bold text-white">{globalStats.totalAnalyzed}</p>
+            <p className="text-[10px] sm:text-xs text-gray-500 uppercase">Jogos Analisados</p>
           </div>
           <div className="bg-grafite-700 rounded-xl p-3 text-center">
             <TrendingUp className="w-4 h-4 text-neon-green mx-auto mb-1" />
-            <p className="text-base sm:text-lg font-bold text-neon-green">{globalStats.hitRate}%</p>
-            <p className="text-[8px] sm:text-[9px] text-gray-500 uppercase">Taxa de Acerto</p>
+            <p className="text-lg sm:text-xl font-bold text-neon-green">{globalStats.hitRate}%</p>
+            <p className="text-[10px] sm:text-xs text-gray-500 uppercase">Taxa de Acerto</p>
           </div>
           <div className="bg-grafite-700 rounded-xl p-3 text-center">
             <Percent className="w-4 h-4 text-gold mx-auto mb-1" />
-            <p className="text-base sm:text-lg font-bold text-gold">+{globalStats.avgProfit}%</p>
-            <p className="text-[8px] sm:text-[9px] text-gray-500 uppercase">ROI Médio</p>
+            <p className="text-lg sm:text-xl font-bold text-gold">+{globalStats.avgProfit}%</p>
+            <p className="text-[10px] sm:text-xs text-gray-500 uppercase">ROI Médio</p>
           </div>
         </div>
 
         {/* Secondary Stats */}
         <div className="grid grid-cols-3 gap-1.5 sm:gap-2 px-2 sm:px-3 pb-2 sm:pb-3">
           <div className="bg-gradient-to-br from-neon-green/10 to-transparent rounded-lg p-2 text-center border border-neon-green/20">
-            <p className="text-sm font-bold text-neon-green">{globalStats.valueBetsFound}</p>
-            <p className="text-[8px] text-gray-500 uppercase">Value Bets</p>
+            <p className="text-base font-bold text-neon-green">{globalStats.valueBetsFound}</p>
+            <p className="text-[10px] text-gray-500 uppercase">Value Bets</p>
           </div>
           <div className="bg-gradient-to-br from-gold/10 to-transparent rounded-lg p-2 text-center border border-gold/20">
-            <p className="text-sm font-bold text-gold">{globalStats.surebetsFound}</p>
-            <p className="text-[8px] text-gray-500 uppercase">Surebets</p>
+            <p className="text-base font-bold text-gold">{globalStats.surebetsFound}</p>
+            <p className="text-[10px] text-gray-500 uppercase">Surebets</p>
           </div>
           <div className="bg-gradient-to-br from-electric-blue/10 to-transparent rounded-lg p-2 text-center border border-electric-blue/20">
-            <p className="text-sm font-bold text-electric-blue">{globalStats.bestStreak}x</p>
-            <p className="text-[8px] text-gray-500 uppercase">Melhor Sequência</p>
+            <p className="text-base font-bold text-electric-blue">{globalStats.bestStreak}x</p>
+            <p className="text-[10px] text-gray-500 uppercase">Melhor Sequência</p>
           </div>
         </div>
 
@@ -90,7 +90,7 @@ export default function StatsPanel() {
         <div className="px-4 pb-3">
           <div className="flex items-center gap-2 mb-2">
             <Award className="w-3.5 h-3.5 text-gold" />
-            <span className="text-[10px] text-gold font-bold uppercase tracking-wider">
+            <span className="text-xs text-gold font-bold uppercase tracking-wider">
               Ranking ROI por Casa de Apostas
             </span>
           </div>
@@ -101,9 +101,9 @@ export default function StatsPanel() {
                 key={house.house}
                 className="flex items-center gap-2 p-2 rounded-lg bg-grafite-700/50 hover:bg-grafite-700 transition-colors"
               >
-                <span className="text-[10px] text-gray-600 w-4 font-bold">#{idx + 1}</span>
-                <span className="text-sm">{house.logo}</span>
-                <span className="text-[11px] sm:text-xs font-medium text-white flex-shrink-0 w-16 sm:w-20 truncate">{house.house}</span>
+                <span className="text-xs text-gray-600 w-5 font-bold">#{idx + 1}</span>
+                <span className="text-base">{house.logo}</span>
+                <span className="text-sm font-medium text-white flex-shrink-0 w-20 sm:w-24 truncate">{house.house}</span>
                 <div className="flex-1 h-3 bg-grafite-800 rounded-full overflow-hidden">
                   <div
                     className={`h-full rounded-full transition-all duration-1000 ${
@@ -113,14 +113,14 @@ export default function StatsPanel() {
                     style={{ width: `${(house.roi / maxRoi) * 100}%` }}
                   />
                 </div>
-                <span className={`text-xs font-bold w-14 text-right ${
+                <span className={`text-sm font-bold w-14 text-right ${
                   idx === 0 ? 'text-neon-green' : idx < 3 ? 'text-neon-green/70' : 'text-gray-400'
                 }`}>
                   +{house.roi}%
                 </span>
                 <div className="flex items-center gap-0.5">
-                  <span className="text-[9px] text-gray-500">{house.rating}</span>
-                  <span className="text-[8px]">⭐</span>
+                  <span className="text-xs text-gray-500">{house.rating}</span>
+                  <span className="text-[10px]">⭐</span>
                 </div>
               </div>
             ))}
@@ -129,7 +129,7 @@ export default function StatsPanel() {
           {houseStats.length > 5 && (
             <button
               onClick={() => setExpanded(!expanded)}
-              className="w-full mt-2 py-1.5 flex items-center justify-center gap-1.5 text-xs text-electric-blue hover:text-electric-blue/80 transition-colors"
+              className="w-full mt-2 py-1.5 flex items-center justify-center gap-1.5 text-sm text-electric-blue hover:text-electric-blue/80 transition-colors"
             >
               {expanded ? (
                 <>

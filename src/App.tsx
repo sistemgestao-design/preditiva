@@ -18,7 +18,7 @@ function Dashboard() {
     <div className={`min-h-screen bg-grafite-900 transition-colors duration-500 ${theme === 'light' ? 'light' : ''}`}>
       <Header />
 
-      <main className="max-w-2xl mx-auto pb-20 sm:pb-8">
+      <main className="max-w-5xl mx-auto pb-20 sm:pb-8 px-2 sm:px-4">
         {/* Story Alerts - Termômetro do Dia */}
         <StoryBar alerts={storyAlerts} />
 

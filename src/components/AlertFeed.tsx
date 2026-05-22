@@ -33,13 +33,13 @@ export default function AlertFeed({ alerts }: AlertFeedProps) {
             <Bell className={`w-4 h-4 text-neon-green ${newAlertPulse ? 'animate-pulse-neon' : ''}`} />
             <div className="absolute -top-1 -right-1 w-2 h-2 bg-neon-green rounded-full" />
           </div>
-          <span className="text-xs font-bold text-white uppercase tracking-wider">
+          <span className="text-sm font-bold text-white uppercase tracking-wider">
             Feed de Alertas em Tempo Real
           </span>
         </div>
         <div className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-neon-green/10 border border-neon-green/20">
           <div className="w-1.5 h-1.5 bg-neon-green rounded-full animate-pulse" />
-          <span className="text-[10px] text-neon-green font-medium">Ao Vivo</span>
+          <span className="text-xs text-neon-green font-medium">Ao Vivo</span>
         </div>
       </div>
 
@@ -51,13 +51,13 @@ export default function AlertFeed({ alerts }: AlertFeedProps) {
             style={{ animationDelay: `${idx * 100}ms` }}
           >
             <div className="flex items-start gap-3">
-              <span className="text-lg mt-0.5">{alert.icon}</span>
+              <span className="text-xl mt-0.5">{alert.icon}</span>
               <div className="flex-1 min-w-0">
-                <p className="text-xs text-gray-300 leading-relaxed">{alert.message}</p>
+                <p className="text-sm text-gray-300 leading-relaxed">{alert.message}</p>
                 <div className="flex items-center gap-2 mt-1.5">
-                  <span className="text-[10px] text-gray-500">{alert.time}</span>
-                  <span className="text-[10px] text-gray-600">·</span>
-                  <span className={`text-[10px] font-medium ${
+                  <span className="text-xs text-gray-500">{alert.time}</span>
+                  <span className="text-xs text-gray-600">·</span>
+                  <span className={`text-xs font-medium ${
                     alert.type === 'football' ? 'text-electric-blue' :
                     alert.type === 'arbitrage' ? 'text-gold' : 'text-purple-400'
                   }`}>
@@ -74,7 +74,7 @@ export default function AlertFeed({ alerts }: AlertFeedProps) {
       {alerts.length > 3 && (
         <button
           onClick={() => setExpanded(!expanded)}
-          className="w-full mt-3 py-2 flex items-center justify-center gap-1.5 text-xs text-gray-500 hover:text-gray-300 transition-colors"
+          className="w-full mt-3 py-2 flex items-center justify-center gap-1.5 text-sm text-gray-500 hover:text-gray-300 transition-colors"
         >
           {expanded ? (
             <>

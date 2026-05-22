@@ -24,7 +24,7 @@ export default function StoryBar({ alerts }: StoryBarProps) {
     <div className="relative">
       <div className="px-3 sm:px-4 py-3">
         <div className="flex items-center gap-2 mb-2">
-          <span className="text-[11px] sm:text-xs font-semibold text-gray-400 uppercase tracking-wider">
+          <span className="text-sm font-semibold text-gray-400 uppercase tracking-wider">
             🔝 Termômetro do Dia
           </span>
           <div className="h-px flex-1 bg-gradient-to-r from-grafite-500 to-transparent" />
@@ -38,11 +38,11 @@ export default function StoryBar({ alerts }: StoryBarProps) {
               className="flex-shrink-0 flex flex-col items-center gap-1.5 group"
             >
               <div className={`p-[2px] rounded-2xl bg-gradient-to-br ${urgencyColors[alert.urgency]} ${selectedStory?.id === alert.id ? 'opacity-50' : ''}`}>
-                <div className="w-16 h-16 sm:w-[72px] sm:h-[72px] rounded-2xl bg-grafite-800 flex items-center justify-center text-2xl group-hover:bg-grafite-700 transition-colors">
+                <div className="w-[72px] h-[72px] sm:w-20 sm:h-20 rounded-2xl bg-grafite-800 flex items-center justify-center text-3xl group-hover:bg-grafite-700 transition-colors">
                   {alert.icon}
                 </div>
               </div>
-              <span className="text-[10px] text-gray-400 max-w-[72px] truncate">
+              <span className="text-xs text-gray-400 max-w-[80px] truncate">
                 {alert.type === 'football' ? '⚽' : '🎰'} {alert.time}
               </span>
             </button>
@@ -56,15 +56,15 @@ export default function StoryBar({ alerts }: StoryBarProps) {
             <span className="text-2xl sm:text-3xl flex-shrink-0">{selectedStory.icon}</span>
             <div className="flex-1">
               <div className="flex items-center gap-2">
-                <h3 className="font-bold text-white text-sm">{selectedStory.title}</h3>
+                <h3 className="font-bold text-white text-base">{selectedStory.title}</h3>
                 {selectedStory.urgency === 'critical' && (
                   <span className="px-2 py-0.5 bg-red-500/20 text-red-400 text-[10px] font-bold rounded-full uppercase">
                     Urgente
                   </span>
                 )}
               </div>
-              <p className="text-sm text-gray-300 mt-1">{selectedStory.description}</p>
-              <span className="text-[10px] text-gray-500 mt-2 block">{selectedStory.time}</span>
+              <p className="text-base text-gray-300 mt-1">{selectedStory.description}</p>
+              <span className="text-xs text-gray-500 mt-2 block">{selectedStory.time}</span>
             </div>
           </div>
         </div>

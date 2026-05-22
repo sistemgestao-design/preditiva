@@ -13,10 +13,10 @@ export default function LotteryPanel({ lotteries }: LotteryPanelProps) {
   return (
     <div className="px-3 sm:px-4 py-2 animate-slide-in">
       <div className="mb-4">
-        <h2 className="text-base font-bold text-white flex items-center gap-2">
+        <h2 className="text-lg font-bold text-white flex items-center gap-2">
           <span className="text-gold">🎰</span> Gerador Quântico de Loterias
         </h2>
-        <p className="text-[11px] text-gray-500 mt-0.5">
+        <p className="text-sm text-gray-500 mt-0.5">
           Inteligência matemática para {lotteries.length} loterias · Análise de padrões por IA
         </p>
       </div>
