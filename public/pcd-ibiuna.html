@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SISTEMA MUNDIAL PREDITIVO PCD — Ibiúna SP</title>
+    <title>SISTEMA MUNICIPAL INTEGRADO PCD — Ibiúna SP</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
@@ -17,34 +17,40 @@
         <div class="flex items-center gap-3">
             <div class="p-2.5 bg-sky-50 text-[#0284C7] rounded-xl border border-sky-100 shadow-sm">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-[#0284C7]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
             </div>
             <div>
-                <span class="text-[10px] font-black tracking-widest text-[#0284C7] uppercase block">PREMIUM PREDICTIVE ENGINE</span>
-                <h1 class="text-xl font-extrabold text-[#0F172A] tracking-tight">GLOBAL PCD MAPPER <span class="text-[#B45309] font-light">| MUNICÍPIO DE IBIÚNA</span></h1>
+                <span class="text-[10px] font-black tracking-widest text-[#0284C7] uppercase block">Plataforma de Inteligência Social</span>
+                <h1 class="text-xl font-extrabold text-[#0F172A] tracking-tight">CADASTRO INCLUSÃO <span class="text-[#B45309] font-light">| IBIÚNA SP</span></h1>
             </div>
         </div>
         <div class="flex items-center gap-4">
             <span class="flex items-center gap-1.5 text-xs font-bold text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-full border border-emerald-200">
-                <span class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span> BANCO DE DADOS ATIVO
+                <span class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span> BANCO DE DADOS UNIFICADO
             </span>
         </div>
     </header>
 
-    <main class="max-w-7xl mx-auto p-6 w-full space-y-6 my-auto grid grid-cols-1 lg:grid-cols-12 gap-6">
+    <main class="max-w-7xl mx-auto p-6 w-full grid grid-cols-1 lg:grid-cols-12 gap-6 my-auto">
 
         <section class="lg:col-span-4 bg-white rounded-2xl border border-[#E2E8F0] p-6 shadow-md flex flex-col justify-between">
             <div>
                 <div class="mb-5">
-                    <span class="text-[9px] bg-[#0284C7] text-white px-2.5 py-1 rounded-md font-bold uppercase tracking-wider">Painel Administrativo</span>
-                    <h2 class="text-lg font-black text-[#0F172A] mt-2 tracking-tight">Cadastro Manual de Cidadão</h2>
-                    <p class="text-xs text-[#64748B] mt-1">Insira os dados coletados em campo ou via requerimento para atualizar o mapa municipal na hora.</p>
+                    <span class="text-[9px] bg-[#0284C7] text-white px-2.5 py-1 rounded-md font-bold uppercase tracking-wider">Entrada de Dados</span>
+                    <h2 class="text-lg font-black text-[#0F172A] mt-2 tracking-tight">Inclusão Manual de Cidadão</h2>
+                    <p class="text-xs text-[#64748B] mt-1">Insira os dados coletados nos postos de saúde, escolas ou visitas de busca ativa.</p>
                 </div>
 
                 <div class="space-y-4">
                     <div>
-                        <label class="block text-xs font-bold text-[#475569] mb-1">Localização (Bairros e Vilas Reais)</label>
+                        <label class="block text-xs font-bold text-[#475569] mb-1">Nome Completo do Cidadão</label>
+                        <input type="text" id="inputNome" placeholder="Ex: João da Silva" class="w-full bg-[#F8F9FA] border border-[#E2E8F0] rounded-xl px-3 py-2 text-sm font-medium focus:outline-none focus:border-[#0284C7]">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-[#475569] mb-1">Bairro / Vila de Ibiúna</label>
                         <select id="regiaoCadastro" class="w-full bg-[#F8F9FA] border border-[#E2E8F0] rounded-xl px-3 py-2.5 text-sm font-semibold text-[#0F172A] focus:outline-none focus:border-[#0284C7]">
                             <option value="Paruru">Paruru</option>
                             <option value="Carmo Messias">Carmo Messias</option>
@@ -54,6 +60,9 @@
                             <option value="Puris">Puris</option>
                             <option value="Verava">Verava</option>
                             <option value="Ressaca">Ressaca</option>
+                            <option value="Sorocamirim">Sorocamirim</option>
+                            <option value="Cupim">Cupim</option>
+                            <option value="Lageado">Lageado</option>
                         </select>
                     </div>
 
@@ -68,23 +77,19 @@
                     </div>
 
                     <div>
-                        <label class="block text-xs font-bold text-[#475569] mb-1">Demanda de Assistência Solicitada</label>
+                        <label class="block text-xs font-bold text-[#475569] mb-1">Principal Benefício Solicitado</label>
                         <select class="w-full bg-[#F8F9FA] border border-[#E2E8F0] rounded-xl px-3 py-2.5 text-sm font-semibold text-[#0F172A] focus:outline-none focus:border-[#0284C7]">
                             <option>Monitor/Cuidador Escolar Especializado</option>
-                            <option>Transporte Adaptado Municipal</option>
-                            <option>Apoio de Medicamentos / Fisioterapia</option>
-                            <option>Inclusão em Programas Sociais</option>
+                            <option>Transporte Adaptado (Consultas/Exames)</option>
+                            <option>Cesta Básica / Auxílio Social</option>
+                            <option>Isenções e Direitos de Trânsito</option>
                         </select>
-                    </div>
-
-                    <div class="bg-blue-50 border border-blue-200 p-3 rounded-xl">
-                        <p class="text-[10px] text-[#0284C7] font-medium leading-relaxed">**Modo Demonstrativo:** Ao clicar no botão abaixo, os gráficos ao lado vão se mover simulando o salvamento instantâneo no banco de dados.</p>
                     </div>
                 </div>
             </div>
 
-            <button onclick="cadastrarCidadao()" class="w-full bg-[#0F172A] hover:bg-[#1E293B] text-white text-xs font-bold py-3.5 rounded-xl shadow-lg mt-6 transition-all tracking-wider uppercase">
-                Confirmar e Salvar Registro
+            <button onclick="salvarRegistroManual()" class="w-full bg-[#0F172A] hover:bg-[#1E293B] text-white text-xs font-bold py-3.5 rounded-xl shadow-lg mt-6 transition-all tracking-wider uppercase">
+                Salvar no Mapa Municipal
             </button>
         </section>
 
@@ -92,57 +97,53 @@
 
             <div class="bg-white rounded-2xl border border-[#E2E8F0] shadow-md overflow-hidden">
                 <div class="bg-[#F1F5F9] px-6 py-3 flex justify-between items-center border-b border-[#E2E8F0]">
-                    <span class="text-xs font-black text-[#475569] uppercase tracking-wider flex items-center gap-2">
-                        <span class="h-2 w-2 rounded-full bg-[#0284C7]"></span> Diagnóstico Demográfico Geral (Ibiúna Consolidado)
-                    </span>
-                    <span class="text-[9px] font-black text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 uppercase">Mapeamento Estatístico</span>
+                    <span class="text-xs font-black text-[#475569] uppercase tracking-wider">Consolidação Demográfica Municipal (Todos os Bairros)</span>
+                    <span class="text-[9px] font-black text-blue-600 bg-blue-50 px-2 py-0.5 rounded border border-blue-200 uppercase">Atualização Instantânea</span>
                 </div>
 
-                <div class="grid grid-cols-3 gap-4 p-6 text-center bg-gradient-to-b from-white to-slate-50/50">
-                    <div>
-                        <span class="block text-[10px] font-bold text-[#64748B] uppercase tracking-wider">Total Mapeado Localizado</span>
-                        <span id="txtMapeados" class="text-3xl font-black text-[#0F172A]">524</span>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 p-6 text-center bg-gradient-to-b from-white to-slate-50/50">
+                    <div class="border-r border-[#E2E8F0]/60 last:border-0">
+                        <span class="block text-[10px] font-bold text-[#64748B] uppercase tracking-wider">Cidadãos PCD Cadastrados</span>
+                        <span id="txtMapeados" class="text-4xl font-black text-[#0F172A]">1.240</span>
                     </div>
                     <div>
-                        <span class="block text-[10px] font-bold text-[#B45309] uppercase tracking-wider">Projeção de Subnotificação (IA)</span>
-                        <span id="txtOcultos" class="text-3xl font-black text-[#B45309]">+870</span>
-                    </div>
-                    <div>
-                        <span class="block text-[10px] font-bold text-emerald-600 uppercase tracking-wider">Acurácia Preditiva</span>
-                        <span class="text-3xl font-black text-emerald-600">97.4%</span>
+                        <span class="block text-[10px] font-bold text-[#B45309] uppercase tracking-wider">Última Região Atualizada</span>
+                        <span id="txtUltimaRegiao" class="text-xl font-bold text-[#B45309] block mt-2">Nenhum registro recente</span>
                     </div>
                 </div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+
                 <div class="md:col-span-5 bg-white rounded-2xl border border-[#E2E8F0] p-5 shadow-md flex flex-col justify-between">
-                    <h3 class="text-xs font-black text-[#475569] uppercase tracking-tight mb-2">Por Tipo de Deficiência</h3>
-                    <div class="w-full max-w-[220px] mx-auto">
+                    <h3 class="text-xs font-black text-[#475569] uppercase tracking-tight mb-4">Divisão por Categoria</h3>
+                    <div class="w-full max-w-[210px] mx-auto">
                         <canvas id="chartDeficiencias"></canvas>
                     </div>
                 </div>
+
                 <div class="md:col-span-7 bg-white rounded-2xl border border-[#E2E8F0] p-5 shadow-md flex flex-col justify-between">
-                    <h3 class="text-xs font-black text-[#475569] uppercase tracking-tight mb-2">Ranking Geral de Regiões</h3>
-                    <div class="w-full h-[220px]">
+                    <h3 class="text-xs font-black text-[#475569] uppercase tracking-tight mb-2">Casos por Bairros e Vilas</h3>
+                    <div class="w-full h-[240px]">
                         <canvas id="chartBairros"></canvas>
                     </div>
                 </div>
+
             </div>
 
         </section>
     </main>
 
     <footer class="bg-white border-t border-[#E2E8F0] py-4 text-center text-[10px] font-bold text-[#94A3B8] uppercase tracking-widest">
-        Top World Premium Neural Architecture — Municipal Intelligence Project.
+        Top World Premium Government Software — Ibiúna SP Project.
     </footer>
 
     <script>
-        let totalMapeados = 524;
-        let totalOcultos = 870;
+        let totalMapeados = 1240;
+        let dadosDef = [450, 390, 240, 160];
 
-        let dadosDef = [40, 30, 18, 12];
-        let labelsBairros = ['Paruru', 'Carmo Messias', 'Centro Urbano', 'Vargem do Salto', 'Piaí', 'Puris', 'Verava', 'Ressaca'];
-        let dadosBairros = [140, 110, 95, 75, 50, 30, 14, 10];
+        let labelsBairros = ['Paruru', 'Carmo Messias', 'Centro Urbano', 'Vargem do Salto', 'Piaí', 'Puris', 'Verava', 'Ressaca', 'Sorocamirim', 'Cupim', 'Lageado'];
+        let dadosBairros = [250, 210, 190, 160, 130, 95, 80, 60, 35, 20, 10];
 
         let chartDef, chartBair;
 
@@ -167,7 +168,7 @@
                 data: {
                     labels: labelsBairros,
                     datasets: [{
-                        label: 'Casos Mapeados',
+                        label: 'Total Cadastrado',
                         data: dadosBairros,
                         backgroundColor: '#0284C7',
                         borderRadius: 4
@@ -186,26 +187,33 @@
             });
         });
 
-        function cadastrarCidadao() {
-            const bairroSelecionado = document.getElementById("regiaoCadastro").value;
-            const defSelecionada = document.getElementById("defCadastro").value;
+        function salvarRegistroManual() {
+            const nome = document.getElementById("inputNome").value.trim();
+            const bairro = document.getElementById("regiaoCadastro").value;
+            const deficiencia = document.getElementById("defCadastro").value;
+
+            if (nome === "") {
+                alert("Por favor, insira o nome do cidadão para efetuar o registro.");
+                return;
+            }
 
             totalMapeados += 1;
-            totalOcultos -= 1;
             document.getElementById("txtMapeados").innerText = totalMapeados;
-            document.getElementById("txtOcultos").innerText = "+" + totalOcultos;
+            document.getElementById("txtUltimaRegiao").innerText = nome + " (" + bairro + ")";
 
-            if (defSelecionada === 'TEA') dadosDef[0] += 1;
-            else if (defSelecionada === 'Física') dadosDef[1] += 1;
-            else if (defSelecionada === 'Auditiva') dadosDef[2] += 1;
+            if (deficiencia === 'TEA') dadosDef[0] += 1;
+            else if (deficiencia === 'Física') dadosDef[1] += 1;
+            else if (deficiencia === 'Auditiva') dadosDef[2] += 1;
             else dadosDef[3] += 1;
             chartDef.update();
 
-            let idxBairro = labelsBairros.indexOf(bairroSelecionado);
-            if (idxBairro !== -1) {
-                dadosBairros[idxBairro] += 1;
+            let idx = labelsBairros.indexOf(bairro);
+            if (idx !== -1) {
+                dadosBairros[idx] += 1;
                 chartBair.update();
             }
+
+            document.getElementById("inputNome").value = "";
         }
     </script>
 </body>
