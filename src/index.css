@@ -69,3 +69,49 @@ body {
 .animate-glow {
   animation: glow 2s ease-in-out infinite;
 }
+
+/* ============================
+   Light Mode Theme Overrides
+   ============================ */
+.light {
+  --color-grafite-900: #f0f2f5;
+  --color-grafite-800: #ffffff;
+  --color-grafite-700: #e8eaed;
+  --color-grafite-600: #dadce0;
+  --color-grafite-500: #bcc0c4;
+  --color-neon-green: #00a651;
+  --color-neon-green-dim: #008c44;
+  --color-electric-blue: #0077cc;
+  --color-electric-blue-dim: #005fa3;
+  --color-gold: #d4930d;
+  --color-gold-dim: #9e6e0a;
+  color: #1c1e21;
+}
+
+.light .text-white {
+  color: #1c1e21;
+}
+
+.light .text-gray-300 {
+  color: #4b5563;
+}
+
+.light .text-gray-400 {
+  color: #374151;
+}
+
+.light .text-gray-500 {
+  color: #6b7280;
+}
+
+.light .text-gray-600 {
+  color: #9ca3af;
+}
+
+.light ::-webkit-scrollbar-track {
+  background: #e8eaed;
+}
+
+.light ::-webkit-scrollbar-thumb {
+  background: #bcc0c4;
+}

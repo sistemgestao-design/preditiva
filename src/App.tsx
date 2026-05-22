@@ -5,13 +5,15 @@ import TabSwitcher from './components/TabSwitcher';
 import FootballPanel from './components/FootballPanel';
 import LotteryPanel from './components/LotteryPanel';
 import AlertFeed from './components/AlertFeed';
+import { ThemeProvider, useTheme } from './context/ThemeContext';
 import { storyAlerts, matches, lotteries, feedAlerts } from './data/mockData';
 
-function App() {
+function Dashboard() {
   const [activeTab, setActiveTab] = useState<'football' | 'lottery'>('football');
+  const { theme } = useTheme();
 
   return (
-    <div className="min-h-screen bg-grafite-900">
+    <div className={`min-h-screen bg-grafite-900 transition-colors duration-500 ${theme === 'light' ? 'light' : ''}`}>
       <Header />
 
       <main className="max-w-2xl mx-auto pb-8">
@@ -38,6 +40,14 @@ function App() {
         <AlertFeed alerts={feedAlerts} />
       </main>
     </div>
+  );
+}
+
+function App() {
+  return (
+    <ThemeProvider>
+      <Dashboard />
+    </ThemeProvider>
   );
 }
 
