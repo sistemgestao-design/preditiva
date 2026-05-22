@@ -36,6 +36,7 @@ export interface Match {
   homeScore?: number;
   awayScore?: number;
   expectedGoals: number;
+  oddsComparison: BettingHouseOdd[];
 }
 
 export interface Lottery {
@@ -50,6 +51,16 @@ export interface Lottery {
   hotNumbers: number[];
   coldNumbers: number[];
   lastResults: number[][];
+}
+
+export interface BettingHouseOdd {
+  house: string;
+  logo: string;
+  homeOdd: number;
+  drawOdd: number;
+  awayOdd: number;
+  bonus?: string;
+  isBest: boolean;
 }
 
 export interface FeedAlert {

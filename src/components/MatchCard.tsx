@@ -1,5 +1,6 @@
 import { TrendingUp, ExternalLink, Target } from 'lucide-react';
 import type { Match } from '../types';
+import OddsComparison from './OddsComparison';
 
 interface MatchCardProps {
   match: Match;
@@ -131,6 +132,13 @@ export default function MatchCard({ match }: MatchCardProps) {
             👉 {match.valueBetHouse} — {match.valueBetAdvantage}
           </p>
         )}
+
+        {/* Odds Comparison Table - Casas do Brasil */}
+        <OddsComparison
+          odds={match.oddsComparison}
+          homeShort={match.homeTeam.shortName}
+          awayShort={match.awayTeam.shortName}
+        />
       </div>
     </div>
   );
