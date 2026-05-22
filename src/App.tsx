@@ -5,7 +5,9 @@ import TabSwitcher from './components/TabSwitcher';
 import FootballPanel from './components/FootballPanel';
 import LotteryPanel from './components/LotteryPanel';
 import AlertFeed from './components/AlertFeed';
+import StatsPanel from './components/StatsPanel';
 import { ThemeProvider, useTheme } from './context/ThemeContext';
+import { FavoritesProvider } from './context/FavoritesContext';
 import { storyAlerts, matches, lotteries, feedAlerts } from './data/mockData';
 
 function Dashboard() {
@@ -36,6 +38,12 @@ function Dashboard() {
         {/* Divider */}
         <div className="mx-4 my-4 h-px bg-gradient-to-r from-transparent via-grafite-500 to-transparent" />
 
+        {/* Stats Panel - Performance da IA */}
+        <StatsPanel />
+
+        {/* Divider */}
+        <div className="mx-4 my-4 h-px bg-gradient-to-r from-transparent via-grafite-500 to-transparent" />
+
         {/* Alert Feed */}
         <AlertFeed alerts={feedAlerts} />
       </main>
@@ -46,7 +54,9 @@ function Dashboard() {
 function App() {
   return (
     <ThemeProvider>
-      <Dashboard />
+      <FavoritesProvider>
+        <Dashboard />
+      </FavoritesProvider>
     </ThemeProvider>
   );
 }

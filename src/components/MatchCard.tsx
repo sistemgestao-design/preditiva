@@ -1,6 +1,9 @@
-import { TrendingUp, ExternalLink, Target } from 'lucide-react';
+import { TrendingUp, ExternalLink, Target, Heart } from 'lucide-react';
 import type { Match } from '../types';
 import OddsComparison from './OddsComparison';
+import ProfitCalculator from './ProfitCalculator';
+import SurebetCalculator from './SurebetCalculator';
+import { useFavorites } from '../context/FavoritesContext';
 
 interface MatchCardProps {
   match: Match;
@@ -8,6 +11,8 @@ interface MatchCardProps {
 
 export default function MatchCard({ match }: MatchCardProps) {
   const maxProb = Math.max(match.homeProb, match.drawProb, match.awayProb);
+  const { toggleFavorite, isFavorite } = useFavorites();
+  const favorited = isFavorite(match.id);
 
   return (
     <div className="bg-grafite-800 rounded-2xl border border-grafite-600 overflow-hidden hover:border-grafite-500 transition-all duration-300 group">
@@ -30,6 +35,19 @@ export default function MatchCard({ match }: MatchCardProps) {
           {match.status === 'today' && (
             <span className="text-xs text-electric-blue">{match.kickoff}</span>
           )}
+          <button
+            onClick={() => toggleFavorite(match.id)}
+            className="p-1.5 rounded-lg hover:bg-grafite-600 transition-all"
+            title={favorited ? 'Remover dos favoritos' : 'Salvar nos favoritos'}
+          >
+            <Heart
+              className={`w-4 h-4 transition-all duration-300 ${
+                favorited
+                  ? 'text-red-500 fill-red-500 scale-110'
+                  : 'text-gray-500 hover:text-red-400'
+              }`}
+            />
+          </button>
         </div>
       </div>
 
@@ -132,6 +150,18 @@ export default function MatchCard({ match }: MatchCardProps) {
             👉 {match.valueBetHouse} — {match.valueBetAdvantage}
           </p>
         )}
+
+        {/* Profit Calculator */}
+        {match.valueBet && match.valueBetOdd && (
+          <ProfitCalculator odd={match.valueBetOdd} label={match.valueBet} />
+        )}
+
+        {/* Surebet Calculator */}
+        <SurebetCalculator
+          odds={match.oddsComparison}
+          homeShort={match.homeTeam.shortName}
+          awayShort={match.awayTeam.shortName}
+        />
 
         {/* Odds Comparison Table - Casas do Brasil */}
         <OddsComparison
