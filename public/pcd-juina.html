@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SISTEMA MUNICIPAL INTEGRADO PCD — Juína MT</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-[#F8F9FA] text-[#1E293B] min-h-screen flex flex-col justify-between">
+
+    <header class="bg-white border-b border-[#E2E8F0] px-8 py-4 flex justify-between items-center shadow-sm">
+        <div class="flex items-center gap-3">
+            <div class="p-2.5 bg-sky-50 text-[#0284C7] rounded-xl border border-sky-100 shadow-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-[#0284C7]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+            </div>
+            <div>
+                <span class="text-[10px] font-black tracking-widest text-[#0284C7] uppercase block">Plataforma de Inteligência Social</span>
+                <h1 class="text-xl font-extrabold text-[#0F172A] tracking-tight">CADASTRO INCLUSÃO <span class="text-[#B45309] font-light">| JUÍNA MT</span></h1>
+            </div>
+        </div>
+        <div class="flex items-center gap-4">
+            <span class="flex items-center gap-1.5 text-xs font-bold text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-full border border-emerald-200">
+                <span class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span> BANCO DE DADOS UNIFICADO
+            </span>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto p-6 w-full grid grid-cols-1 lg:grid-cols-12 gap-6 my-auto">
+
+        <section class="lg:col-span-4 bg-white rounded-2xl border border-[#E2E8F0] p-6 shadow-md flex flex-col justify-between">
+            <div>
+                <div class="mb-5">
+                    <span class="text-[9px] bg-[#0284C7] text-white px-2.5 py-1 rounded-md font-bold uppercase tracking-wider">Entrada de Dados</span>
+                    <h2 class="text-lg font-black text-[#0F172A] mt-2 tracking-tight">Inclusão Manual de Cidadão</h2>
+                    <p class="text-xs text-[#64748B] mt-1">Selecione o Módulo ou Distrito de Juína correspondente para registrar o caso.</p>
+                </div>
+
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold text-[#475569] mb-1">Nome Completo do Cidadão</label>
+                        <input type="text" id="inputNome" placeholder="Ex: Maria de Souza" class="w-full bg-[#F8F9FA] border border-[#E2E8F0] rounded-xl px-3 py-2 text-sm font-medium focus:outline-none focus:border-[#0284C7]">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-[#475569] mb-1">Bairro / Setor / Distrito</label>
+                        <select id="regiaoCadastro" class="w-full bg-[#F8F9FA] border border-[#E2E8F0] rounded-xl px-3 py-2.5 text-sm font-semibold text-[#0F172A] focus:outline-none focus:border-[#0284C7]">
+                            <option value="Centro">Centro</option>
+                            <option value="Módulo 01">Módulo 01</option>
+                            <option value="Módulo 02">Módulo 02</option>
+                            <option value="Módulo 03">Módulo 03</option>
+                            <option value="Módulo 04">Módulo 04</option>
+                            <option value="Módulo 05">Módulo 05</option>
+                            <option value="Módulo 06">Módulo 06</option>
+                            <option value="Módulo 07">Módulo 07</option>
+                            <option value="Módulo 08">Módulo 08</option>
+                            <option value="Módulo 09">Módulo 09</option>
+                            <option value="Módulo 10">Módulo 10</option>
+                            <option value="Setor Industrial">Setor Industrial</option>
+                            <option value="Palmiteira">Palmiteira</option>
+                            <option value="Padre Duílio">Padre Duílio</option>
+                            <option value="Primavera">Primavera</option>
+                            <option value="São José Operário">São José Operário</option>
+                            <option value="Distrito Terra Roxa">Distrito Terra Roxa</option>
+                            <option value="Distrito Filadélfia">Distrito Filadélfia</option>
+                            <option value="Distrito Fontanillas">Distrito Fontanillas</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-[#475569] mb-1">Tipo de Deficiência</label>
+                        <select id="defCadastro" class="w-full bg-[#F8F9FA] border border-[#E2E8F0] rounded-xl px-3 py-2.5 text-sm font-semibold text-[#0F172A] focus:outline-none focus:border-[#0284C7]">
+                            <option value="TEA">TEA (Autismo)</option>
+                            <option value="Física">Física / Motora</option>
+                            <option value="Auditiva">Auditiva</option>
+                            <option value="Visual">Visual</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-[#475569] mb-1">Demanda de Assistência Requerida</label>
+                        <select class="w-full bg-[#F8F9FA] border border-[#E2E8F0] rounded-xl px-3 py-2.5 text-sm font-semibold text-[#0F172A] focus:outline-none focus:border-[#0284C7]">
+                            <option>Monitor/Cuidador Escolar Especializado</option>
+                            <option>Transporte Adaptado Municipal</option>
+                            <option>Apoio de Medicamentos / Reabilitação</option>
+                            <option>Inclusão em Programas Sociais Estaduais</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <button onclick="salvarRegistroManual()" class="w-full bg-[#0F172A] hover:bg-[#1E293B] text-white text-xs font-bold py-3.5 rounded-xl shadow-lg mt-6 transition-all tracking-wider uppercase">
+                Salvar no Mapa de Juína
+            </button>
+        </section>
+
+        <section class="lg:col-span-8 space-y-6">
+
+            <div class="bg-white rounded-2xl border border-[#E2E8F0] shadow-md overflow-hidden">
+                <div class="bg-[#F1F5F9] px-6 py-3 flex justify-between items-center border-b border-[#E2E8F0]">
+                    <span class="text-xs font-black text-[#475569] uppercase tracking-wider">Consolidação Demográfica Municipal (Juína Total)</span>
+                    <span class="text-[9px] font-black text-blue-600 bg-blue-50 px-2 py-0.5 rounded border border-blue-200 uppercase">Filtro Ativo: Todos os Setores</span>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 p-6 text-center bg-gradient-to-b from-white to-slate-50/50">
+                    <div class="border-r border-[#E2E8F0]/60 last:border-0">
+                        <span class="block text-[10px] font-bold text-[#64748B] uppercase tracking-wider">Cidadãos PCD Cadastrados</span>
+                        <span id="txtMapeados" class="text-4xl font-black text-[#0F172A]">742</span>
+                    </div>
+                    <div>
+                        <span class="block text-[10px] font-bold text-[#B45309] uppercase tracking-wider">Último Registro Processado</span>
+                        <span id="txtUltimaRegiao" class="text-xl font-bold text-[#B45309] block mt-2">Nenhum registro recente</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+
+                <div class="md:col-span-5 bg-white rounded-2xl border border-[#E2E8F0] p-5 shadow-md flex flex-col justify-between">
+                    <h3 class="text-xs font-black text-[#475569] uppercase tracking-tight mb-4">Divisão por Categoria</h3>
+                    <div class="w-full max-w-[210px] mx-auto">
+                        <canvas id="chartDeficiencias"></canvas>
+                    </div>
+                </div>
+
+                <div class="md:col-span-7 bg-white rounded-2xl border border-[#E2E8F0] p-5 shadow-md flex flex-col justify-between">
+                    <h3 class="text-xs font-black text-[#475569] uppercase tracking-tight mb-2">Casos por Setor / Localidade</h3>
+                    <div class="w-full h-[280px]">
+                        <canvas id="chartBairros"></canvas>
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+    </main>
+
+    <footer class="bg-white border-t border-[#E2E8F0] py-4 text-center text-[10px] font-bold text-[#94A3B8] uppercase tracking-widest">
+        Top World Premium Government Software — Juína MT Project.
+    </footer>
+
+    <script>
+        let totalMapeados = 742;
+        let dadosDef = [290, 230, 140, 82];
+
+        let labelsBairros = [
+            'Centro', 'Módulo 01', 'Módulo 02', 'Módulo 03', 'Módulo 04',
+            'Módulo 05', 'Módulo 06', 'Módulo 07', 'Módulo 08', 'Módulo 09',
+            'Módulo 10', 'Setor Industrial', 'Palmiteira', 'Padre Duílio',
+            'Primavera', 'São José Operário', 'Distrito Terra Roxa',
+            'Distrito Filadélfia', 'Distrito Fontanillas'
+        ];
+        let dadosBairros = [90, 85, 75, 70, 65, 55, 50, 45, 40, 35, 30, 25, 20, 18, 15, 12, 8, 3, 1];
+
+        let chartDef, chartBair;
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const ctxDef = document.getElementById('chartDeficiencias').getContext('2d');
+            chartDef = new Chart(ctxDef, {
+                type: 'pie',
+                data: {
+                    labels: ['TEA (Autismo)', 'Física', 'Auditiva', 'Visual'],
+                    datasets: [{
+                        data: dadosDef,
+                        backgroundColor: ['#0284C7', '#334155', '#64748B', '#94A3B8'],
+                        borderWidth: 2
+                    }]
+                },
+                options: { responsive: true, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10, weight: '600' } } } } }
+            });
+
+            const ctxBairros = document.getElementById('chartBairros').getContext('2d');
+            chartBair = new Chart(ctxBairros, {
+                type: 'bar',
+                data: {
+                    labels: labelsBairros,
+                    datasets: [{
+                        label: 'Total Cadastrado',
+                        data: dadosBairros,
+                        backgroundColor: '#0284C7',
+                        borderRadius: 3
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { grid: { display: false }, ticks: { font: { size: 9, weight: '600' } } },
+                        y: { grid: { display: false }, ticks: { font: { size: 9, weight: '600' } } }
+                    }
+                }
+            });
+        });
+
+        function salvarRegistroManual() {
+            const nome = document.getElementById("inputNome").value.trim();
+            const bairro = document.getElementById("regiaoCadastro").value;
+            const deficiencia = document.getElementById("defCadastro").value;
+
+            if (nome === "") {
+                alert("Por favor, insira o nome do cidadão para efetuar o registro municipal.");
+                return;
+            }
+
+            totalMapeados += 1;
+            document.getElementById("txtMapeados").innerText = totalMapeados;
+            document.getElementById("txtUltimaRegiao").innerText = nome + " (" + bairro + ")";
+
+            if (deficiencia === 'TEA') dadosDef[0] += 1;
+            else if (deficiencia === 'Física') dadosDef[1] += 1;
+            else if (deficiencia === 'Auditiva') dadosDef[2] += 1;
+            else dadosDef[3] += 1;
+            chartDef.update();
+
+            let idx = labelsBairros.indexOf(bairro);
+            if (idx !== -1) {
+                dadosBairros[idx] += 1;
+                chartBair.update();
+            }
+
+            document.getElementById("inputNome").value = "";
+        }
+    </script>
+</body>
+</html>
