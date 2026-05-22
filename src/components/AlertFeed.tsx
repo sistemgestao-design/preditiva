@@ -26,7 +26,7 @@ export default function AlertFeed({ alerts }: AlertFeedProps) {
   };
 
   return (
-    <div className="px-4 py-4">
+    <div className="px-3 sm:px-4 py-4">
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <div className="relative">

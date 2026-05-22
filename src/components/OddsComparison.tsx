@@ -39,9 +39,9 @@ export default function OddsComparison({ odds, homeShort, awayShort }: OddsCompa
         )}
       </button>
 
-      <div className="overflow-hidden">
+      <div className="overflow-x-auto">
         {/* Table Header */}
-        <div className="grid grid-cols-[1fr_60px_60px_60px] gap-1 px-2 mb-1">
+        <div className="grid grid-cols-[1fr_50px_50px_50px] sm:grid-cols-[1fr_60px_60px_60px] gap-1 px-2 mb-1 min-w-0">
           <span className="text-[9px] text-gray-600 uppercase">Casa</span>
           <span className="text-[9px] text-gray-600 uppercase text-center">{homeShort}</span>
           <span className="text-[9px] text-gray-600 uppercase text-center">Emp</span>
@@ -53,7 +53,7 @@ export default function OddsComparison({ odds, homeShort, awayShort }: OddsCompa
           {visibleOdds.map((odd) => (
             <div
               key={odd.house}
-              className={`grid grid-cols-[1fr_60px_60px_60px] gap-1 items-center px-2 py-1.5 rounded-lg transition-colors ${
+              className={`grid grid-cols-[1fr_50px_50px_50px] sm:grid-cols-[1fr_60px_60px_60px] gap-1 items-center px-2 py-2 sm:py-1.5 rounded-lg transition-colors ${
                 odd.isBest
                   ? 'bg-neon-green/10 border border-neon-green/20'
                   : 'bg-grafite-700/30 hover:bg-grafite-700/50'

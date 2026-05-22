@@ -11,7 +11,7 @@ export default function FootballPanel({ matches }: FootballPanelProps) {
   const upcomingMatches = matches.filter((m) => m.status !== 'live');
 
   return (
-    <div className="px-4 py-2 animate-slide-in">
+    <div className="px-3 sm:px-4 py-2 animate-slide-in">
       {/* Section Header */}
       <div className="flex items-center justify-between mb-4">
         <div>

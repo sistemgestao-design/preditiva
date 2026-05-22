@@ -22,9 +22,9 @@ export default function StoryBar({ alerts }: StoryBarProps) {
 
   return (
     <div className="relative">
-      <div className="px-4 py-3">
+      <div className="px-3 sm:px-4 py-3">
         <div className="flex items-center gap-2 mb-2">
-          <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
+          <span className="text-[11px] sm:text-xs font-semibold text-gray-400 uppercase tracking-wider">
             🔝 Termômetro do Dia
           </span>
           <div className="h-px flex-1 bg-gradient-to-r from-grafite-500 to-transparent" />
@@ -51,9 +51,9 @@ export default function StoryBar({ alerts }: StoryBarProps) {
       </div>
 
       {selectedStory && (
-        <div className={`mx-4 mb-3 p-4 rounded-xl border ${urgencyBg[selectedStory.urgency]} animate-slide-in`}>
-          <div className="flex items-start gap-3">
-            <span className="text-3xl">{selectedStory.icon}</span>
+        <div className={`mx-3 sm:mx-4 mb-3 p-3 sm:p-4 rounded-xl border ${urgencyBg[selectedStory.urgency]} animate-slide-in`}>
+          <div className="flex items-start gap-2 sm:gap-3">
+            <span className="text-2xl sm:text-3xl flex-shrink-0">{selectedStory.icon}</span>
             <div className="flex-1">
               <div className="flex items-center gap-2">
                 <h3 className="font-bold text-white text-sm">{selectedStory.title}</h3>

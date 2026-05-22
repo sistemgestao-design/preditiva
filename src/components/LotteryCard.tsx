@@ -11,7 +11,7 @@ export default function LotteryCard({ lottery, isActive, onClick }: LotteryCardP
   return (
     <button
       onClick={onClick}
-      className={`flex-shrink-0 w-44 p-4 rounded-2xl border transition-all duration-300 text-left ${
+      className={`flex-shrink-0 w-36 sm:w-44 p-3 sm:p-4 rounded-2xl border transition-all duration-300 text-left ${
         isActive
           ? 'bg-gradient-to-br from-gold/15 to-orange-500/10 border-gold/40 shadow-[0_0_20px_rgba(255,215,0,0.1)]'
           : 'bg-grafite-800 border-grafite-600 hover:border-grafite-500'
@@ -46,7 +46,7 @@ export function LotteryDetail({ lottery }: LotteryDetailProps) {
           Insights da IA — {lottery.name}
         </h3>
 
-        <div className="grid grid-cols-2 gap-3 mb-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
           {/* Hot Numbers */}
           <div className="bg-grafite-700 rounded-xl p-3">
             <div className="flex items-center gap-1.5 mb-2">

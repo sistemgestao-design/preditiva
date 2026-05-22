@@ -52,26 +52,26 @@ export default function StatsPanel() {
         </div>
 
         {/* Global Stats Grid */}
-        <div className="grid grid-cols-3 gap-2 p-3">
+        <div className="grid grid-cols-3 gap-1.5 sm:gap-2 p-2 sm:p-3">
           <div className="bg-grafite-700 rounded-xl p-3 text-center">
             <Zap className="w-4 h-4 text-electric-blue mx-auto mb-1" />
-            <p className="text-lg font-bold text-white">{globalStats.totalAnalyzed}</p>
-            <p className="text-[9px] text-gray-500 uppercase">Jogos Analisados</p>
+            <p className="text-base sm:text-lg font-bold text-white">{globalStats.totalAnalyzed}</p>
+            <p className="text-[8px] sm:text-[9px] text-gray-500 uppercase">Jogos Analisados</p>
           </div>
           <div className="bg-grafite-700 rounded-xl p-3 text-center">
             <TrendingUp className="w-4 h-4 text-neon-green mx-auto mb-1" />
-            <p className="text-lg font-bold text-neon-green">{globalStats.hitRate}%</p>
-            <p className="text-[9px] text-gray-500 uppercase">Taxa de Acerto</p>
+            <p className="text-base sm:text-lg font-bold text-neon-green">{globalStats.hitRate}%</p>
+            <p className="text-[8px] sm:text-[9px] text-gray-500 uppercase">Taxa de Acerto</p>
           </div>
           <div className="bg-grafite-700 rounded-xl p-3 text-center">
             <Percent className="w-4 h-4 text-gold mx-auto mb-1" />
-            <p className="text-lg font-bold text-gold">+{globalStats.avgProfit}%</p>
-            <p className="text-[9px] text-gray-500 uppercase">ROI Médio</p>
+            <p className="text-base sm:text-lg font-bold text-gold">+{globalStats.avgProfit}%</p>
+            <p className="text-[8px] sm:text-[9px] text-gray-500 uppercase">ROI Médio</p>
           </div>
         </div>
 
         {/* Secondary Stats */}
-        <div className="grid grid-cols-3 gap-2 px-3 pb-3">
+        <div className="grid grid-cols-3 gap-1.5 sm:gap-2 px-2 sm:px-3 pb-2 sm:pb-3">
           <div className="bg-gradient-to-br from-neon-green/10 to-transparent rounded-lg p-2 text-center border border-neon-green/20">
             <p className="text-sm font-bold text-neon-green">{globalStats.valueBetsFound}</p>
             <p className="text-[8px] text-gray-500 uppercase">Value Bets</p>
@@ -103,7 +103,7 @@ export default function StatsPanel() {
               >
                 <span className="text-[10px] text-gray-600 w-4 font-bold">#{idx + 1}</span>
                 <span className="text-sm">{house.logo}</span>
-                <span className="text-xs font-medium text-white flex-shrink-0 w-20 truncate">{house.house}</span>
+                <span className="text-[11px] sm:text-xs font-medium text-white flex-shrink-0 w-16 sm:w-20 truncate">{house.house}</span>
                 <div className="flex-1 h-3 bg-grafite-800 rounded-full overflow-hidden">
                   <div
                     className={`h-full rounded-full transition-all duration-1000 ${

@@ -71,7 +71,7 @@ export default function LotteryOptimizer({ lottery }: LotteryOptimizerProps) {
       </p>
 
       {/* Number Grid */}
-      <div className="grid grid-cols-10 gap-1.5 mb-4">
+      <div className="grid grid-cols-6 sm:grid-cols-10 gap-1.5 sm:gap-1.5 mb-4">
         {Array.from({ length: lottery.numbersRange }, (_, i) => i + 1).map((num) => {
           const isSelected = userNumbers.includes(num);
           const isHot = lottery.hotNumbers.includes(num);
@@ -79,7 +79,7 @@ export default function LotteryOptimizer({ lottery }: LotteryOptimizerProps) {
             <button
               key={num}
               onClick={() => toggleNumber(num)}
-              className={`w-full aspect-square rounded-lg text-xs font-bold transition-all duration-200 ${
+              className={`w-full aspect-square rounded-lg text-xs font-bold transition-all duration-200 min-h-[40px] sm:min-h-0 ${
                 isSelected
                   ? 'bg-gradient-to-br from-neon-green to-electric-blue text-grafite-900 scale-110 shadow-[0_0_10px_rgba(57,255,20,0.3)]'
                   : isHot
@@ -93,11 +93,11 @@ export default function LotteryOptimizer({ lottery }: LotteryOptimizerProps) {
         })}
       </div>
 
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-2">
         <span className="text-[10px] text-gray-500">
           {userNumbers.length} selecionados · Mínimo: {lottery.pickCount}
         </span>
-        <div className="flex gap-2">
+        <div className="flex gap-2 w-full sm:w-auto justify-end">
           {userNumbers.length > 0 && (
             <button
               onClick={() => { setUserNumbers([]); setOptimizedGames([]); }}

@@ -11,7 +11,7 @@ export default function LotteryPanel({ lotteries }: LotteryPanelProps) {
   const [activeLottery, setActiveLottery] = useState<Lottery>(lotteries[0]);
 
   return (
-    <div className="px-4 py-2 animate-slide-in">
+    <div className="px-3 sm:px-4 py-2 animate-slide-in">
       <div className="mb-4">
         <h2 className="text-base font-bold text-white flex items-center gap-2">
           <span className="text-gold">🎰</span> Gerador Quântico de Loterias

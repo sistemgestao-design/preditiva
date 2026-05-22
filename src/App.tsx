@@ -18,12 +18,12 @@ function Dashboard() {
     <div className={`min-h-screen bg-grafite-900 transition-colors duration-500 ${theme === 'light' ? 'light' : ''}`}>
       <Header />
 
-      <main className="max-w-2xl mx-auto pb-8">
+      <main className="max-w-2xl mx-auto pb-20 sm:pb-8">
         {/* Story Alerts - Termômetro do Dia */}
         <StoryBar alerts={storyAlerts} />
 
         {/* Divider */}
-        <div className="mx-4 h-px bg-gradient-to-r from-transparent via-grafite-500 to-transparent" />
+        <div className="mx-3 sm:mx-4 h-px bg-gradient-to-r from-transparent via-grafite-500 to-transparent" />
 
         {/* Tab Switcher */}
         <TabSwitcher activeTab={activeTab} onTabChange={setActiveTab} />
@@ -36,13 +36,13 @@ function Dashboard() {
         )}
 
         {/* Divider */}
-        <div className="mx-4 my-4 h-px bg-gradient-to-r from-transparent via-grafite-500 to-transparent" />
+        <div className="mx-3 sm:mx-4 my-4 h-px bg-gradient-to-r from-transparent via-grafite-500 to-transparent" />
 
         {/* Stats Panel - Performance da IA */}
         <StatsPanel />
 
         {/* Divider */}
-        <div className="mx-4 my-4 h-px bg-gradient-to-r from-transparent via-grafite-500 to-transparent" />
+        <div className="mx-3 sm:mx-4 my-4 h-px bg-gradient-to-r from-transparent via-grafite-500 to-transparent" />
 
         {/* Alert Feed */}
         <AlertFeed alerts={feedAlerts} />
