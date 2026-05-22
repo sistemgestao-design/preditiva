@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Calculator, DollarSign, TrendingUp, ChevronDown, ChevronUp } from 'lucide-react';
+import { Calculator, ChevronDown, ChevronUp, TrendingUp } from 'lucide-react';
 
 interface ProfitCalculatorProps {
   odd: number;
@@ -7,47 +7,58 @@ interface ProfitCalculatorProps {
 }
 
 export default function ProfitCalculator({ odd, label }: ProfitCalculatorProps) {
-  const [stake, setStake] = useState('');
   const [expanded, setExpanded] = useState(false);
+  const [stake, setStake] = useState('100');
+  const presets = [50, 100, 200, 500];
 
   const stakeNum = parseFloat(stake) || 0;
   const profit = stakeNum * odd - stakeNum;
   const totalReturn = stakeNum * odd;
 
-  const presets = [10, 25, 50, 100, 250, 500];
-
   return (
     <div className="mt-2">
       <button
         onClick={() => setExpanded(!expanded)}
-        className="w-full flex items-center justify-between py-1.5 px-3 rounded-lg bg-grafite-700/50 hover:bg-grafite-700 transition-colors"
+        className="w-full flex items-center justify-between py-1.5 px-3 rounded-lg bg-[#F1F5F9] hover:bg-[#E2E8F0] border border-[#E2E8F0] transition-colors"
       >
-        <span className="text-xs font-bold text-gold uppercase tracking-wider flex items-center gap-1.5">
+        <span className="text-xs font-bold text-[#B45309] uppercase tracking-wider flex items-center gap-1.5">
           <Calculator className="w-3.5 h-3.5" />
-          Calculadora de Lucro
+          Calculadora de Retorno
         </span>
         {expanded ? (
-          <ChevronUp className="w-3.5 h-3.5 text-gray-400" />
+          <ChevronUp className="w-3.5 h-3.5 text-[#64748B]" />
         ) : (
-          <ChevronDown className="w-3.5 h-3.5 text-gray-400" />
+          <ChevronDown className="w-3.5 h-3.5 text-[#64748B]" />
         )}
       </button>
 
       {expanded && (
-        <div className="mt-2 p-3 bg-grafite-700/30 rounded-xl border border-grafite-500 animate-slide-in">
-          <p className="text-xs text-gray-500 mb-2">
-            Aposta: <span className="text-white font-medium">{label}</span> @ <span className="text-neon-green font-bold">{odd.toFixed(2)}</span>
+        <div className="mt-2 p-4 bg-white rounded-xl border border-[#E2E8F0] shadow-sm animate-slide-in">
+          <p className="text-xs text-[#64748B] mb-2">
+            Aposta: <span className="text-[#0F172A] font-medium">{label}</span> @ <span className="text-[#059669] font-bold">{odd.toFixed(2)}</span>
           </p>
 
-          <div className="flex gap-2 mb-3">
-            <div className="relative flex-1">
-              <DollarSign className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-500" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+            <div>
+              <label className="block text-xs font-semibold text-[#64748B] mb-1.5">Valor do Investimento</label>
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-[#94A3B8] font-medium">R$</span>
+                <input
+                  type="number"
+                  value={stake}
+                  onChange={(e) => setStake(e.target.value)}
+                  placeholder="Valor da aposta"
+                  className="w-full pl-9 pr-3 py-2.5 bg-[#F8F9FA] border border-[#E2E8F0] rounded-xl text-sm font-bold text-[#0F172A] placeholder-[#94A3B8] focus:outline-none focus:border-[#0284C7] transition-colors"
+                />
+              </div>
+            </div>
+            <div>
+              <label className="block text-xs font-semibold text-[#64748B] mb-1.5">Odd Selecionada</label>
               <input
-                type="number"
-                value={stake}
-                onChange={(e) => setStake(e.target.value)}
-                placeholder="Valor da aposta"
-                className="w-full pl-8 pr-3 py-2.5 bg-grafite-800 border border-grafite-500 rounded-lg text-base text-white placeholder-gray-600 focus:outline-none focus:border-electric-blue transition-colors"
+                type="text"
+                value={odd.toFixed(2)}
+                disabled
+                className="w-full px-4 py-2.5 bg-[#F1F5F9] border border-[#E2E8F0] rounded-xl text-sm font-bold text-[#475569]"
               />
             </div>
           </div>
@@ -59,8 +70,8 @@ export default function ProfitCalculator({ odd, label }: ProfitCalculatorProps) 
                 onClick={() => setStake(val.toString())}
                 className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
                   stake === val.toString()
-                    ? 'bg-neon-green/20 text-neon-green border border-neon-green/30'
-                    : 'bg-grafite-700 text-gray-400 border border-grafite-500 hover:border-gray-400'
+                    ? 'bg-[#0284C7] text-white'
+                    : 'bg-[#F1F5F9] text-[#64748B] border border-[#E2E8F0] hover:border-[#94A3B8]'
                 }`}
               >
                 R$ {val}
@@ -69,21 +80,17 @@ export default function ProfitCalculator({ odd, label }: ProfitCalculatorProps) 
           </div>
 
           {stakeNum > 0 && (
-            <div className="grid grid-cols-3 gap-2">
-              <div className="bg-grafite-800 rounded-lg p-2 text-center border border-grafite-500">
-                <p className="text-xs text-gray-500 uppercase">Investido</p>
-                <p className="text-base font-bold text-white">R$ {stakeNum.toFixed(2)}</p>
+            <div className="grid grid-cols-2 gap-3 pt-3 border-t border-[#F1F5F9]">
+              <div className="bg-[#F0FDF4] p-3 rounded-xl border border-emerald-100">
+                <span className="block text-[10px] font-bold text-emerald-600 uppercase">Retorno Estimado</span>
+                <span className="text-lg font-extrabold text-emerald-700">R$ {totalReturn.toFixed(2)}</span>
               </div>
-              <div className="bg-grafite-800 rounded-lg p-2 text-center border border-neon-green/20">
-                <p className="text-xs text-neon-green uppercase">Lucro</p>
-                <p className="text-base font-bold text-neon-green flex items-center justify-center gap-0.5">
-                  <TrendingUp className="w-3 h-3" />
+              <div className="bg-[#EFF6FF] p-3 rounded-xl border border-blue-100">
+                <span className="block text-[10px] font-bold text-blue-600 uppercase">Lucro Líquido Real</span>
+                <span className="text-lg font-extrabold text-blue-700 flex items-center gap-1">
+                  <TrendingUp className="w-4 h-4" />
                   R$ {profit.toFixed(2)}
-                </p>
-              </div>
-              <div className="bg-grafite-800 rounded-lg p-2 text-center border border-electric-blue/20">
-                <p className="text-xs text-electric-blue uppercase">Retorno</p>
-                <p className="text-base font-bold text-electric-blue">R$ {totalReturn.toFixed(2)}</p>
+                </span>
               </div>
             </div>
           )}

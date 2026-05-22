@@ -6,40 +6,41 @@ interface AlertFeedProps {
   alerts: FeedAlert[];
 }
 
+const importanceBorder: Record<string, string> = {
+  high: 'border-l-emerald-500',
+  medium: 'border-l-[#0284C7]',
+  low: 'border-l-[#94A3B8]',
+};
+
 export default function AlertFeed({ alerts }: AlertFeedProps) {
   const [expanded, setExpanded] = useState(false);
-  const [newAlertPulse, setNewAlertPulse] = useState(true);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setNewAlertPulse((prev) => !prev);
-    }, 3000);
-    return () => clearInterval(interval);
-  }, []);
+  const [newAlertPulse, setNewAlertPulse] = useState(false);
 
   const visibleAlerts = expanded ? alerts : alerts.slice(0, 3);
 
-  const importanceBorder = {
-    high: 'border-l-neon-green',
-    medium: 'border-l-electric-blue',
-    low: 'border-l-gray-600',
-  };
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setNewAlertPulse(true);
+      setTimeout(() => setNewAlertPulse(false), 2000);
+    }, 15000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
-    <div className="px-3 sm:px-4 py-4">
+    <div className="px-4 py-2">
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <div className="relative">
-            <Bell className={`w-4 h-4 text-neon-green ${newAlertPulse ? 'animate-pulse-neon' : ''}`} />
-            <div className="absolute -top-1 -right-1 w-2 h-2 bg-neon-green rounded-full" />
+            <Bell className={`w-4 h-4 text-emerald-600 ${newAlertPulse ? 'animate-pulse-neon' : ''}`} />
+            <div className="absolute -top-1 -right-1 w-2 h-2 bg-emerald-500 rounded-full" />
           </div>
-          <span className="text-sm font-bold text-white uppercase tracking-wider">
+          <span className="text-sm font-bold text-[#0F172A] uppercase tracking-wider">
             Feed de Alertas em Tempo Real
           </span>
         </div>
-        <div className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-neon-green/10 border border-neon-green/20">
-          <div className="w-1.5 h-1.5 bg-neon-green rounded-full animate-pulse" />
-          <span className="text-xs text-neon-green font-medium">Ao Vivo</span>
+        <div className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-emerald-50 border border-emerald-200">
+          <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
+          <span className="text-xs text-emerald-600 font-medium">Ao Vivo</span>
         </div>
       </div>
 
@@ -47,19 +48,19 @@ export default function AlertFeed({ alerts }: AlertFeedProps) {
         {visibleAlerts.map((alert, idx) => (
           <div
             key={alert.id}
-            className={`bg-grafite-800 rounded-xl border border-grafite-600 border-l-2 ${importanceBorder[alert.importance]} p-3 transition-all hover:bg-grafite-700`}
+            className={`bg-white rounded-xl border border-[#E2E8F0] border-l-2 ${importanceBorder[alert.importance]} p-3 transition-all hover:shadow-sm shadow-sm`}
             style={{ animationDelay: `${idx * 100}ms` }}
           >
             <div className="flex items-start gap-3">
               <span className="text-xl mt-0.5">{alert.icon}</span>
               <div className="flex-1 min-w-0">
-                <p className="text-sm text-gray-300 leading-relaxed">{alert.message}</p>
+                <p className="text-sm text-[#475569] leading-relaxed">{alert.message}</p>
                 <div className="flex items-center gap-2 mt-1.5">
-                  <span className="text-xs text-gray-500">{alert.time}</span>
-                  <span className="text-xs text-gray-600">·</span>
+                  <span className="text-xs text-[#94A3B8]">{alert.time}</span>
+                  <span className="text-xs text-[#CBD5E1]">·</span>
                   <span className={`text-xs font-medium ${
-                    alert.type === 'football' ? 'text-electric-blue' :
-                    alert.type === 'arbitrage' ? 'text-gold' : 'text-purple-400'
+                    alert.type === 'football' ? 'text-[#0284C7]' :
+                    alert.type === 'arbitrage' ? 'text-[#B45309]' : 'text-purple-500'
                   }`}>
                     {alert.type === 'football' ? '⚽ Futebol' :
                      alert.type === 'arbitrage' ? '💰 Arbitragem' : '🎰 Loteria'}
@@ -74,7 +75,7 @@ export default function AlertFeed({ alerts }: AlertFeedProps) {
       {alerts.length > 3 && (
         <button
           onClick={() => setExpanded(!expanded)}
-          className="w-full mt-3 py-2 flex items-center justify-center gap-1.5 text-sm text-gray-500 hover:text-gray-300 transition-colors"
+          className="w-full mt-3 py-2 flex items-center justify-center gap-1.5 text-sm text-[#0284C7] font-semibold hover:text-[#0369A1] transition-colors"
         >
           {expanded ? (
             <>
@@ -84,7 +85,7 @@ export default function AlertFeed({ alerts }: AlertFeedProps) {
           ) : (
             <>
               <ChevronDown className="w-3.5 h-3.5" />
-              Ver mais {alerts.length - 3} alertas
+              + {alerts.length - 3} alertas
             </>
           )}
         </button>

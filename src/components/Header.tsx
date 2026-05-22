@@ -1,47 +1,44 @@
-import { Brain, Zap, Sun, Moon } from 'lucide-react';
+import { Brain, Sun, Moon } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 
 export default function Header() {
   const { theme, toggleTheme } = useTheme();
 
   return (
-    <header className="sticky top-0 z-50 bg-grafite-900/95 backdrop-blur-md border-b border-grafite-600">
-      <div className="max-w-7xl mx-auto px-3 sm:px-4 py-2.5 sm:py-3 flex items-center justify-between">
-        <div className="flex items-center gap-2 sm:gap-3 min-w-0">
-          <div className="relative flex-shrink-0">
-            <Brain className="w-7 h-7 sm:w-8 sm:h-8 text-electric-blue" />
-            <div className="absolute -top-1 -right-1 w-2.5 h-2.5 sm:w-3 sm:h-3 bg-neon-green rounded-full animate-pulse-neon" />
+    <header className="sticky top-0 z-50 bg-white border-b border-[#E2E8F0] shadow-sm">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="p-2 bg-[#E0F2FE] text-[#0284C7] rounded-lg flex-shrink-0">
+            <Brain className="w-6 h-6" />
           </div>
           <div className="min-w-0">
-            <h1 className="text-lg sm:text-xl font-bold bg-gradient-to-r from-neon-green to-electric-blue bg-clip-text text-transparent truncate">
-              TOP WORLD PREMIUM
+            <span className="text-[10px] sm:text-xs font-bold tracking-widest text-[#0284C7] uppercase">Sistema Preditivo</span>
+            <h1 className="text-base sm:text-lg font-bold text-[#0F172A] tracking-tight">
+              TOP WORLD <span className="text-[#B45309]">PREMIUM</span>
             </h1>
-            <p className="text-[11px] sm:text-xs text-gray-500 tracking-widest uppercase">
-              Inteligência Preditiva
-            </p>
           </div>
         </div>
 
-        <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
-          <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-grafite-700 border border-grafite-500">
-            <Zap className="w-3.5 h-3.5 text-neon-green" />
-            <span className="text-xs text-neon-green font-medium">IA Online</span>
-          </div>
+        <div className="flex items-center gap-3 sm:gap-4 flex-shrink-0">
+          <span className="hidden sm:flex items-center gap-1.5 text-xs font-semibold text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-full border border-emerald-200">
+            <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+            IA ONLINE
+          </span>
           <button
             onClick={toggleTheme}
-            className="relative p-2.5 sm:p-2 rounded-xl bg-grafite-700 border border-grafite-500 hover:border-electric-blue/50 transition-all duration-300 group"
-            title={theme === 'dark' ? 'Modo Dia' : 'Modo Noite'}
+            className="p-2 rounded-lg bg-[#F1F5F9] border border-[#E2E8F0] hover:bg-[#E2E8F0] transition-all"
+            title={theme === 'light' ? 'Modo Noite' : 'Modo Dia'}
           >
             <div className="relative w-5 h-5">
               <Sun
-                className={`w-5 h-5 text-gold absolute inset-0 transition-all duration-300 ${
+                className={`w-5 h-5 text-[#D97706] absolute inset-0 transition-all duration-300 ${
                   theme === 'light'
                     ? 'opacity-100 rotate-0 scale-100'
                     : 'opacity-0 rotate-90 scale-50'
                 }`}
               />
               <Moon
-                className={`w-5 h-5 text-electric-blue absolute inset-0 transition-all duration-300 ${
+                className={`w-5 h-5 text-[#0284C7] absolute inset-0 transition-all duration-300 ${
                   theme === 'dark'
                     ? 'opacity-100 rotate-0 scale-100'
                     : 'opacity-0 -rotate-90 scale-50'
@@ -49,6 +46,9 @@ export default function Header() {
               />
             </div>
           </button>
+          <div className="h-8 w-8 rounded-full bg-[#E2E8F0] flex items-center justify-center font-bold text-xs text-[#64748B]">
+            VIP
+          </div>
         </div>
       </div>
     </header>
