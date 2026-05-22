@@ -1,0 +1,182 @@
+@import "tailwindcss";
+
+@theme {
+  --color-grafite-900: #0d0f14;
+  --color-grafite-800: #141720;
+  --color-grafite-700: #1a1e2b;
+  --color-grafite-600: #232836;
+  --color-grafite-500: #2d3344;
+  --color-neon-green: #39ff14;
+  --color-neon-green-dim: #2bc910;
+  --color-electric-blue: #00bfff;
+  --color-electric-blue-dim: #0099cc;
+  --color-gold: #ffd700;
+  --color-gold-dim: #b8960f;
+  --color-alert-red: #ff4757;
+  --color-alert-orange: #ff9f43;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background-color: var(--color-grafite-900);
+  color: #e0e0e0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-grafite-800);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-grafite-500);
+  border-radius: 3px;
+}
+
+@keyframes pulse-neon {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+@keyframes slide-in {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes glow {
+  0%, 100% { box-shadow: 0 0 5px var(--color-neon-green), 0 0 10px rgba(57, 255, 20, 0.3); }
+  50% { box-shadow: 0 0 15px var(--color-neon-green), 0 0 30px rgba(57, 255, 20, 0.5); }
+}
+
+.animate-pulse-neon {
+  animation: pulse-neon 2s ease-in-out infinite;
+}
+
+.animate-slide-in {
+  animation: slide-in 0.5s ease-out forwards;
+}
+
+.animate-glow {
+  animation: glow 2s ease-in-out infinite;
+}
+
+/* ============================
+   Light Mode Theme Overrides
+   ============================ */
+.light {
+  --color-grafite-900: #f0f2f5;
+  --color-grafite-800: #ffffff;
+  --color-grafite-700: #e8eaed;
+  --color-grafite-600: #dadce0;
+  --color-grafite-500: #bcc0c4;
+  --color-neon-green: #00a651;
+  --color-neon-green-dim: #008c44;
+  --color-electric-blue: #0077cc;
+  --color-electric-blue-dim: #005fa3;
+  --color-gold: #d4930d;
+  --color-gold-dim: #9e6e0a;
+  color: #1c1e21;
+}
+
+.light .text-white {
+  color: #1c1e21;
+}
+
+.light .text-gray-300 {
+  color: #4b5563;
+}
+
+.light .text-gray-400 {
+  color: #374151;
+}
+
+.light .text-gray-500 {
+  color: #6b7280;
+}
+
+.light .text-gray-600 {
+  color: #9ca3af;
+}
+
+.light ::-webkit-scrollbar-track {
+  background: #e8eaed;
+}
+
+.light ::-webkit-scrollbar-thumb {
+  background: #bcc0c4;
+}
+
+/* ============================
+   Premium Animations
+   ============================ */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+@keyframes count-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, transparent 0%, rgba(57, 255, 20, 0.1) 50%, transparent 100%);
+  background-size: 200% 100%;
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-count-up {
+  animation: count-up 0.6s ease-out forwards;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* ============================
+   Mobile Responsive Overrides
+   ============================ */
+@media (max-width: 480px) {
+  body {
+    font-size: 14px;
+    -webkit-text-size-adjust: 100%;
+    overflow-x: hidden;
+  }
+
+  html {
+    overflow-x: hidden;
+  }
+
+  /* Increase touch targets */
+  button {
+    min-height: 36px;
+  }
+
+  input {
+    font-size: 16px !important; /* prevents iOS zoom on focus */
+  }
+}
