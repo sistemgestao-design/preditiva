@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { getLiveMatches } from './_lib/service';
+import { getLiveMatches } from './_lib/service.js';
 
 // Short-polling endpoint for live scores/minute/odds. The frontend hits this
 // every ~30s for games in progress. Kept lightweight (live fixtures only).

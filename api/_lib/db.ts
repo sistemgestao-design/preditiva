@@ -1,17 +1,46 @@
-// Vercel Postgres data layer. Everything here is defensive: if POSTGRES_URL is
-// not configured (e.g. before the database is created in the Vercel dashboard),
-// every function becomes a no-op and the API falls back to live/mock data.
-import { sql } from '@vercel/postgres';
-import type { Match } from './types';
+// Postgres data layer (Supabase-compatible via postgres.js).
+//
+// Everything here is defensive: if no connection string is configured, every
+// function becomes a no-op and the API falls back to live/mock data. We use
+// postgres.js (not @vercel/postgres) because the Supabase connection string is
+// a standard Postgres endpoint — the @vercel/postgres Neon driver talks to a
+// Neon proxy over fetch and fails against Supabase ("fetch failed").
+import postgres from 'postgres';
+import type { Match } from './types.js';
+
+// Prefer the pooled connection (transaction pooler, port 6543) which is the
+// right choice for short-lived serverless invocations; fall back to the direct
+// connection if that's all that's available.
+const CONNECTION_STRING =
+  process.env.POSTGRES_URL || process.env.POSTGRES_URL_NON_POOLING || '';
 
 export function hasDatabase(): boolean {
-  return !!process.env.POSTGRES_URL || !!process.env.POSTGRES_URL_NON_POOLING;
+  return !!CONNECTION_STRING;
+}
+
+// Lazily create a single client per warm function instance. `prepare: false` is
+// required for the Supabase transaction pooler (pgbouncer) which doesn't support
+// prepared statements.
+let client: ReturnType<typeof postgres> | null = null;
+
+function db(): ReturnType<typeof postgres> {
+  if (!client) {
+    client = postgres(CONNECTION_STRING, {
+      prepare: false,
+      ssl: 'require',
+      max: 1,
+      idle_timeout: 20,
+      connect_timeout: 10,
+    });
+  }
+  return client;
 }
 
 let schemaReady = false;
 
 export async function ensureSchema(): Promise<void> {
   if (!hasDatabase() || schemaReady) return;
+  const sql = db();
   await sql`
     CREATE TABLE IF NOT EXISTS matches (
       id            BIGINT PRIMARY KEY,
@@ -29,6 +58,7 @@ export async function ensureSchema(): Promise<void> {
 export async function saveMatches(matches: Match[]): Promise<void> {
   if (!hasDatabase() || matches.length === 0) return;
   await ensureSchema();
+  const sql = db();
   for (const m of matches) {
     await sql`
       INSERT INTO matches (id, payload, status, league, updated_at)
@@ -46,7 +76,8 @@ export async function saveMatches(matches: Match[]): Promise<void> {
 export async function getActiveMatches(): Promise<Match[]> {
   if (!hasDatabase()) return [];
   await ensureSchema();
-  const { rows } = await sql<{ payload: Match }>`
+  const sql = db();
+  const rows = await sql<{ payload: Match }[]>`
     SELECT payload FROM matches
     WHERE status <> 'finished'
     ORDER BY
@@ -57,24 +88,25 @@ export async function getActiveMatches(): Promise<Match[]> {
   return rows.map((r) => r.payload);
 }
 
-// Expiration/cleanup: mark finished games and delete very old rows so the table
-// (and the main screen) never congest.
+// Expiration/cleanup: delete finished games older than 24h so the table (and the
+// main screen) never congest.
 export async function expireFinishedMatches(): Promise<number> {
   if (!hasDatabase()) return 0;
   await ensureSchema();
-  // Remove finished games older than 24h from the active pool entirely.
-  const { rowCount } = await sql`
+  const sql = db();
+  const result = await sql`
     DELETE FROM matches
     WHERE status = 'finished' AND updated_at < now() - INTERVAL '24 hours';
   `;
-  return rowCount ?? 0;
+  return result.count ?? 0;
 }
 
 // Timestamp of the most recently refreshed match (used to decide staleness).
 export async function lastUpdatedAt(): Promise<Date | null> {
   if (!hasDatabase()) return null;
   await ensureSchema();
-  const { rows } = await sql<{ max: string | null }>`SELECT MAX(updated_at) AS max FROM matches;`;
+  const sql = db();
+  const rows = await sql<{ max: string | null }[]>`SELECT MAX(updated_at) AS max FROM matches;`;
   const max = rows[0]?.max;
   return max ? new Date(max) : null;
 }
