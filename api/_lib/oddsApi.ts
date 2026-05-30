@@ -1,8 +1,8 @@
 // The Odds API client (https://the-odds-api.com/).
 // Free plan: 500 requests/month. Each call returns odds for many events, so we
 // fetch once per refresh cycle and match events to fixtures by team name.
-import { fetchJson } from './http';
-import type { BettingHouseOdd } from './types';
+import { fetchJson } from './http.js';
+import type { BettingHouseOdd } from './types.js';
 
 const BASE = 'https://api.the-odds-api.com/v4';
 

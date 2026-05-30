@@ -2,8 +2,8 @@
 // Free plan: 100 requests/day. We keep request counts low by fetching a small
 // set of fixtures per call and letting the cron job (not each user) drive
 // refreshes.
-import { fetchJson } from './http';
-import type { Match, Team } from './types';
+import { fetchJson } from './http.js';
+import type { Match, Team } from './types.js';
 
 const BASE = 'https://v3.football.api-sports.io';
 

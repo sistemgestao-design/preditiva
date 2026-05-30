@@ -2,8 +2,8 @@
 // Match shape the UI expects: best market odds, AI-style probabilities derived
 // from the market, and a detected "value bet" when a house's odd is clearly
 // above the market average.
-import type { Match } from './types';
-import { impliedProbabilities, type MatchOdds } from './oddsApi';
+import type { Match } from './types.js';
+import { impliedProbabilities, type MatchOdds } from './oddsApi.js';
 
 function normalize(name: string): string {
   return name.toLowerCase().replace(/[^a-z]/g, '');

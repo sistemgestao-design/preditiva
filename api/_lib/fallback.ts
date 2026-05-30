@@ -1,7 +1,7 @@
 // Fallback dataset used whenever the external APIs are unavailable, return
 // empty/null responses, or no API keys are configured yet. This guarantees the
 // UI never breaks or shows frozen/zeroed data.
-import type { Match } from './types';
+import type { Match } from './types.js';
 
 const H = {
   superbet: { house: 'Superbet', logo: '🟡' },

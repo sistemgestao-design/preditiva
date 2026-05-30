@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { getMatches } from './_lib/service';
+import { getMatches } from './_lib/service.js';
 
 // Returns the odds comparison for a single match (?id=<matchId>), or the full
 // list of matches' odds when no id is given. Reuses the cached match data so it
