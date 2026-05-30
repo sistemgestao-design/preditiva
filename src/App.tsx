@@ -8,17 +8,23 @@ import AlertFeed from './components/AlertFeed';
 import StatsPanel from './components/StatsPanel';
 import { ThemeProvider, useTheme } from './context/ThemeContext';
 import { FavoritesProvider } from './context/FavoritesContext';
-import { storyAlerts, matches, lotteries, feedAlerts } from './data/mockData';
+import { storyAlerts, lotteries, feedAlerts } from './data/mockData';
+import { useDashboardData } from './hooks/useDashboardData';
+import DataStatusBar from './components/DataStatusBar';
 
 function Dashboard() {
   const [activeTab, setActiveTab] = useState<'football' | 'lottery'>('football');
   const { theme } = useTheme();
+  const { matches, source, updatedAt, notice, loading } = useDashboardData();
 
   return (
     <div className={`min-h-screen bg-grafite-900 transition-colors duration-500 ${theme === 'dark' ? 'dark' : ''}`}>
       <Header />
 
       <main className="max-w-5xl mx-auto pb-20 sm:pb-8 px-2 sm:px-4">
+        {/* Status da fonte de dados (ao vivo / cache / demonstração) */}
+        <DataStatusBar source={source} updatedAt={updatedAt} notice={notice} loading={loading} />
+
         {/* Story Alerts - Termômetro do Dia */}
         <StoryBar alerts={storyAlerts} />
 

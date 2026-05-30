@@ -1,0 +1,50 @@
+// Shared backend types — mirror of src/types/index.ts so the API and the
+// frontend agree on the data shape.
+
+export interface Team {
+  name: string;
+  shortName: string;
+  logo: string;
+}
+
+export interface BettingHouseOdd {
+  house: string;
+  logo: string;
+  homeOdd: number;
+  drawOdd: number;
+  awayOdd: number;
+  bonus?: string;
+  isBest: boolean;
+}
+
+export interface Match {
+  id: number;
+  league: string;
+  leagueIcon: string;
+  homeTeam: Team;
+  awayTeam: Team;
+  homeProb: number;
+  drawProb: number;
+  awayProb: number;
+  homeOdd: number;
+  drawOdd: number;
+  awayOdd: number;
+  valueBet: string | null;
+  valueBetOdd: number | null;
+  valueBetHouse: string;
+  valueBetAdvantage: string;
+  kickoff: string;
+  status: 'live' | 'upcoming' | 'today' | 'finished';
+  minute?: number;
+  homeScore?: number;
+  awayScore?: number;
+  expectedGoals: number;
+  oddsComparison: BettingHouseOdd[];
+}
+
+export interface ApiResponse<T> {
+  data: T;
+  source: 'live' | 'cache' | 'fallback';
+  updatedAt: string;
+  notice?: string;
+}

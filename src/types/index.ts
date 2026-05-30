@@ -31,7 +31,7 @@ export interface Match {
   valueBetHouse: string;
   valueBetAdvantage: string;
   kickoff: string;
-  status: 'live' | 'upcoming' | 'today';
+  status: 'live' | 'upcoming' | 'today' | 'finished';
   minute?: number;
   homeScore?: number;
   awayScore?: number;
