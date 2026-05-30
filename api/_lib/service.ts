@@ -1,18 +1,18 @@
 // Orchestration layer used by the serverless endpoints. Encapsulates the
 // "live → cache → fallback" strategy so every endpoint behaves consistently
 // and the UI never receives empty/broken data.
-import type { ApiResponse, Match } from './types';
-import { fetchTodayFixtures, fetchLiveFixtures } from './apiFootball';
-import { fetchAllOdds } from './oddsApi';
-import { enrichMatches } from './merge';
-import { fallbackMatches } from './fallback';
+import type { ApiResponse, Match } from './types.js';
+import { fetchTodayFixtures, fetchLiveFixtures } from './apiFootball.js';
+import { fetchAllOdds } from './oddsApi.js';
+import { enrichMatches } from './merge.js';
+import { fallbackMatches } from './fallback.js';
 import {
   hasDatabase,
   getActiveMatches,
   saveMatches,
   lastUpdatedAt,
   expireFinishedMatches,
-} from './db';
+} from './db.js';
 
 const STALE_MS = 15 * 60 * 1000; // 15 minutes
 

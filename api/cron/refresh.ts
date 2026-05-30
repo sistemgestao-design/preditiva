@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { refreshAll } from '../_lib/service';
+import { refreshAll } from '../_lib/service.js';
 
 // Cron job (configured in vercel.json) that periodically fetches the day's
 // fixtures + odds, upserts them into Postgres, and expires finished games.

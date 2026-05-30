@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { getMatches } from './_lib/service';
+import { getMatches } from './_lib/service.js';
 
 export default async function handler(_req: VercelRequest, res: VercelResponse) {
   try {
