@@ -5,33 +5,31 @@ interface TabSwitcherProps {
 
 export default function TabSwitcher({ activeTab, onTabChange }: TabSwitcherProps) {
   return (
-    <div className="px-3 sm:px-4 py-2">
-      <div className="flex bg-grafite-800 rounded-2xl p-1 border border-grafite-600">
-        <button
-          onClick={() => onTabChange('football')}
-          className={`flex-1 flex items-center justify-center gap-1.5 sm:gap-2 py-3 rounded-xl font-bold text-xs sm:text-sm transition-all duration-300 ${
-            activeTab === 'football'
-              ? 'bg-gradient-to-r from-neon-green/20 to-electric-blue/20 text-neon-green border border-neon-green/30 shadow-[0_0_15px_rgba(57,255,20,0.15)]'
-              : 'text-gray-500 hover:text-gray-300'
-          }`}
-        >
-          <span className="text-lg sm:text-xl">⚽</span>
-          <span className="hidden sm:inline">Futebol Premium</span>
-          <span className="sm:hidden">Futebol</span>
-        </button>
-        <button
-          onClick={() => onTabChange('lottery')}
-          className={`flex-1 flex items-center justify-center gap-1.5 sm:gap-2 py-3 rounded-xl font-bold text-xs sm:text-sm transition-all duration-300 ${
-            activeTab === 'lottery'
-              ? 'bg-gradient-to-r from-gold/20 to-orange-500/20 text-gold border border-gold/30 shadow-[0_0_15px_rgba(255,215,0,0.15)]'
-              : 'text-gray-500 hover:text-gray-300'
-          }`}
-        >
-          <span className="text-lg sm:text-xl">🎰</span>
-          <span className="hidden sm:inline">Loterias Inteligente</span>
-          <span className="sm:hidden">Loterias</span>
-        </button>
-      </div>
+    <div className="mx-3 sm:mx-4 my-4 flex gap-2 bg-[#F1F5F9] p-1 rounded-xl border border-[#E2E8F0]">
+      <button
+        onClick={() => onTabChange('football')}
+        className={`flex-1 flex items-center justify-center gap-1.5 sm:gap-2 py-3 rounded-xl font-bold text-sm sm:text-base transition-all duration-300 ${
+          activeTab === 'football'
+            ? 'bg-white text-[#0F172A] shadow-sm border border-[#E2E8F0]'
+            : 'text-[#64748B] hover:text-[#475569] hover:bg-white/50'
+        }`}
+      >
+        <span className="text-xl sm:text-2xl">⚽</span>
+        <span className="hidden sm:inline">Futebol Premium</span>
+        <span className="sm:hidden">Futebol</span>
+      </button>
+      <button
+        onClick={() => onTabChange('lottery')}
+        className={`flex-1 flex items-center justify-center gap-1.5 sm:gap-2 py-3 rounded-xl font-bold text-sm sm:text-base transition-all duration-300 ${
+          activeTab === 'lottery'
+            ? 'bg-white text-[#0F172A] shadow-sm border border-[#E2E8F0]'
+            : 'text-[#64748B] hover:text-[#475569] hover:bg-white/50'
+        }`}
+      >
+        <span className="text-xl sm:text-2xl">🎰</span>
+        <span className="hidden sm:inline">Loterias Inteligente</span>
+        <span className="sm:hidden">Loterias</span>
+      </button>
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Wand2, Copy, Check, Sparkles } from 'lucide-react';
+import { Wand2, Sparkles, Copy, Check } from 'lucide-react';
 import type { Lottery } from '../types';
 
 interface LotteryOptimizerProps {
@@ -16,35 +16,23 @@ export default function LotteryOptimizer({ lottery }: LotteryOptimizerProps) {
     setUserNumbers((prev) =>
       prev.includes(num)
         ? prev.filter((n) => n !== num)
-        : prev.length < lottery.pickCount + 4
-          ? [...prev, num].sort((a, b) => a - b)
-          : prev
+        : [...prev, num]
     );
-    setOptimizedGames([]);
   };
 
   const optimizeGame = () => {
-    if (userNumbers.length < lottery.pickCount) return;
     setIsOptimizing(true);
-
     setTimeout(() => {
       const games: number[][] = [];
-      const pool = [...userNumbers];
+      const sorted = [...userNumbers].sort((a, b) => a - b);
+      const numGames = Math.min(5, Math.ceil(sorted.length / lottery.pickCount));
 
-      for (let g = 0; g < Math.min(Math.ceil(pool.length / lottery.pickCount) + 2, 6); g++) {
+      for (let i = 0; i < numGames; i++) {
         const game: number[] = [];
-        const available = [...pool];
-        while (game.length < lottery.pickCount && available.length > 0) {
-          const idx = Math.floor(Math.random() * available.length);
-          game.push(available[idx]);
-          available.splice(idx, 1);
-        }
-        while (game.length < lottery.pickCount) {
-          let num: number;
-          do {
-            num = Math.floor(Math.random() * lottery.numbersRange) + 1;
-          } while (game.includes(num));
-          game.push(num);
+        const pool = [...sorted];
+        while (game.length < lottery.pickCount && pool.length > 0) {
+          const idx = Math.floor(Math.random() * pool.length);
+          game.push(pool.splice(idx, 1)[0]);
         }
         games.push(game.sort((a, b) => a - b));
       }
@@ -61,16 +49,15 @@ export default function LotteryOptimizer({ lottery }: LotteryOptimizerProps) {
   };
 
   return (
-    <div className="bg-grafite-800 rounded-2xl border border-grafite-600 p-4">
-      <h3 className="text-sm font-bold text-white flex items-center gap-2 mb-1">
-        <Wand2 className="w-4 h-4 text-gold" />
+    <div className="bg-white rounded-2xl border border-[#E2E8F0] p-4 shadow-sm">
+      <h3 className="text-base font-bold text-[#0F172A] flex items-center gap-2 mb-1">
+        <Wand2 className="w-4 h-4 text-[#B45309]" />
         Otimizador Quântico — {lottery.name}
       </h3>
-      <p className="text-[10px] text-gray-500 mb-4">
+      <p className="text-xs text-[#64748B] mb-4">
         Selecione {lottery.pickCount}+ números da sorte e a IA gera o fechamento matemático perfeito
       </p>
 
-      {/* Number Grid */}
       <div className="grid grid-cols-6 sm:grid-cols-10 gap-1.5 sm:gap-1.5 mb-4">
         {Array.from({ length: lottery.numbersRange }, (_, i) => i + 1).map((num) => {
           const isSelected = userNumbers.includes(num);
@@ -81,10 +68,10 @@ export default function LotteryOptimizer({ lottery }: LotteryOptimizerProps) {
               onClick={() => toggleNumber(num)}
               className={`w-full aspect-square rounded-lg text-xs font-bold transition-all duration-200 min-h-[40px] sm:min-h-0 ${
                 isSelected
-                  ? 'bg-gradient-to-br from-neon-green to-electric-blue text-grafite-900 scale-110 shadow-[0_0_10px_rgba(57,255,20,0.3)]'
+                  ? 'bg-[#0284C7] text-white scale-110 shadow-md'
                   : isHot
-                    ? 'bg-grafite-700 text-neon-green border border-neon-green/20 hover:border-neon-green/50'
-                    : 'bg-grafite-700 text-gray-400 border border-grafite-500 hover:border-gray-400'
+                    ? 'bg-[#F0FDF4] text-emerald-600 border border-emerald-200 hover:border-emerald-400'
+                    : 'bg-[#F8F9FA] text-[#475569] border border-[#E2E8F0] hover:border-[#94A3B8]'
               }`}
             >
               {num}
@@ -94,14 +81,14 @@ export default function LotteryOptimizer({ lottery }: LotteryOptimizerProps) {
       </div>
 
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-2">
-        <span className="text-[10px] text-gray-500">
+        <span className="text-xs text-[#64748B]">
           {userNumbers.length} selecionados · Mínimo: {lottery.pickCount}
         </span>
         <div className="flex gap-2 w-full sm:w-auto justify-end">
           {userNumbers.length > 0 && (
             <button
               onClick={() => { setUserNumbers([]); setOptimizedGames([]); }}
-              className="px-3 py-1.5 rounded-lg bg-grafite-700 text-gray-400 text-xs hover:bg-grafite-600 transition-colors"
+              className="px-3 py-1.5 rounded-lg bg-[#F1F5F9] text-[#64748B] text-sm border border-[#E2E8F0] hover:bg-[#E2E8F0] transition-colors"
             >
               Limpar
             </button>
@@ -109,40 +96,36 @@ export default function LotteryOptimizer({ lottery }: LotteryOptimizerProps) {
           <button
             onClick={optimizeGame}
             disabled={userNumbers.length < lottery.pickCount || isOptimizing}
-            className={`px-4 py-2 rounded-xl flex items-center gap-2 text-xs font-bold transition-all ${
+            className={`px-4 py-2 rounded-xl flex items-center gap-2 text-sm font-bold transition-all ${
               userNumbers.length >= lottery.pickCount
-                ? 'bg-gradient-to-r from-gold to-orange-500 text-grafite-900 hover:shadow-[0_0_20px_rgba(255,215,0,0.3)]'
-                : 'bg-grafite-700 text-gray-500 cursor-not-allowed'
+                ? 'bg-[#B45309] hover:bg-[#92400E] text-white shadow-md'
+                : 'bg-[#F1F5F9] text-[#94A3B8] cursor-not-allowed border border-[#E2E8F0]'
             }`}
           >
-            <Sparkles className={`w-4 h-4 ${isOptimizing ? 'animate-spin' : ''}`} />
+            <Sparkles className="w-4 h-4" />
             {isOptimizing ? 'Otimizando...' : 'Otimizar Jogo'}
           </button>
         </div>
       </div>
 
-      {/* Optimized Games */}
       {optimizedGames.length > 0 && (
-        <div className="space-y-2 animate-slide-in">
-          <p className="text-[10px] text-neon-green font-bold uppercase tracking-wider">
-            ✨ {optimizedGames.length} Bilhetes Otimizados pela IA
+        <div className="space-y-2">
+          <p className="text-xs text-[#64748B] uppercase tracking-wider font-semibold">
+            Bilhetes Otimizados pela IA
           </p>
           {optimizedGames.map((game, idx) => (
             <div
               key={idx}
-              className="flex items-center justify-between p-3 bg-grafite-700 rounded-xl border border-grafite-500"
+              className="flex items-center justify-between p-3 bg-[#FEF3C7] rounded-xl border border-[#D97706]/20 animate-slide-in"
+              style={{ animationDelay: `${idx * 100}ms` }}
             >
               <div className="flex items-center gap-2">
-                <span className="text-[10px] text-gray-500 w-14">Jogo {idx + 1}</span>
-                <div className="flex gap-1.5 flex-wrap">
+                <span className="text-xs font-bold text-[#B45309]">#{idx + 1}</span>
+                <div className="flex flex-wrap gap-1">
                   {game.map((num) => (
                     <span
                       key={num}
-                      className={`w-7 h-7 flex items-center justify-center rounded-full text-[10px] font-bold ${
-                        userNumbers.includes(num)
-                          ? 'bg-neon-green/20 text-neon-green border border-neon-green/30'
-                          : 'bg-electric-blue/20 text-electric-blue border border-electric-blue/30'
-                      }`}
+                      className="w-7 h-7 flex items-center justify-center rounded-full bg-white text-[#B45309] text-xs font-bold border border-[#D97706]/30"
                     >
                       {num}
                     </span>
@@ -151,12 +134,13 @@ export default function LotteryOptimizer({ lottery }: LotteryOptimizerProps) {
               </div>
               <button
                 onClick={() => copyGame(game, idx)}
-                className="p-2 rounded-lg hover:bg-grafite-600 transition-colors"
+                className="p-1.5 rounded-lg hover:bg-white/50 transition-colors flex-shrink-0"
+                title="Copiar bilhete"
               >
                 {copiedIdx === idx ? (
-                  <Check className="w-4 h-4 text-neon-green" />
+                  <Check className="w-4 h-4 text-emerald-600" />
                 ) : (
-                  <Copy className="w-4 h-4 text-gray-400" />
+                  <Copy className="w-4 h-4 text-[#B45309]" />
                 )}
               </button>
             </div>
