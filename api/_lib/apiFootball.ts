@@ -33,6 +33,23 @@ interface AFResponse {
   response: AFFixture[];
 }
 
+const KEY_HEADER = 'x-apisports-key';
+
+// Keep only fixtures from the leagues we track.
+function filterTracked(fixtures: AFFixture[]): AFFixture[] {
+  return fixtures.filter((f) => f.league.id in LEAGUES);
+}
+
+// The free plan only serves a rolling date window. When a date is out of range
+// the API replies with e.g. "...try from 2026-05-29 to 2026-05-31." — we parse
+// the first allowed date so the app can still show real upcoming fixtures.
+function parseAllowedDate(errors: unknown): string | null {
+  if (!errors || typeof errors !== 'object') return null;
+  const text = Object.values(errors as Record<string, string>).join(' ');
+  const match = text.match(/\d{4}-\d{2}-\d{2}/);
+  return match ? match[0] : null;
+}
+
 function hasKey(): boolean {
   return !!process.env.API_FOOTBALL_KEY;
 }
@@ -96,40 +113,51 @@ function mapFixture(f: AFFixture): Match {
   };
 }
 
-// Fetch today's fixtures for the configured leagues. One request covers all
-// leagues for a given date, keeping us well within the free quota.
+async function fetchFixturesByDate(date: string): Promise<AFResponse | null> {
+  // Note: API-Football rejects multiple league IDs in one `league` param, so we
+  // fetch the whole date and filter to our leagues in code (still 1 request).
+  const url = `${BASE}/fixtures?date=${date}&timezone=America/Sao_Paulo`;
+  const result = await fetchJson<AFResponse>(url, {
+    headers: { [KEY_HEADER]: process.env.API_FOOTBALL_KEY as string },
+    timeoutMs: 5000,
+  });
+  return result.ok && result.data ? result.data : null;
+}
+
+// Fetch fixtures for today; if the free plan blocks today's date, retry once
+// with the first date it does allow.
 export async function fetchTodayFixtures(): Promise<Match[] | null> {
   if (!hasKey()) return null;
 
   const today = new Date().toISOString().slice(0, 10);
-  const ids = Object.keys(LEAGUES).join('-');
-  const url = `${BASE}/fixtures?date=${today}&timezone=America/Sao_Paulo&league=${ids}`;
+  let data = await fetchFixturesByDate(today);
+  if (!data) return null;
 
-  const result = await fetchJson<AFResponse>(url, {
-    headers: { 'x-apisports-key': process.env.API_FOOTBALL_KEY as string },
-    timeoutMs: 5000,
-  });
+  if (data.results === 0) {
+    const allowed = parseAllowedDate(data.errors);
+    if (allowed && allowed !== today) {
+      data = await fetchFixturesByDate(allowed);
+      if (!data) return null;
+    }
+  }
 
-  if (!result.ok) return null;
-  if (!result.data || !Array.isArray(result.data.response)) return null;
-
-  return result.data.response.map(mapFixture);
+  if (!Array.isArray(data.response)) return null;
+  return filterTracked(data.response).map(mapFixture);
 }
 
-// Fetch only currently-live fixtures (cheap, used for the live polling path).
+// Fetch currently-live fixtures (cheap, used for the live polling path).
+// `live=all` returns every live game globally; we filter to our leagues.
 export async function fetchLiveFixtures(): Promise<Match[] | null> {
   if (!hasKey()) return null;
 
-  const ids = Object.keys(LEAGUES).join('-');
-  const url = `${BASE}/fixtures?live=all&league=${ids}`;
-
+  const url = `${BASE}/fixtures?live=all`;
   const result = await fetchJson<AFResponse>(url, {
-    headers: { 'x-apisports-key': process.env.API_FOOTBALL_KEY as string },
+    headers: { [KEY_HEADER]: process.env.API_FOOTBALL_KEY as string },
     timeoutMs: 5000,
   });
 
   if (!result.ok || !result.data || !Array.isArray(result.data.response)) return null;
-  return result.data.response.map(mapFixture);
+  return filterTracked(result.data.response).map(mapFixture);
 }
 
 export { hasKey as hasApiFootballKey };

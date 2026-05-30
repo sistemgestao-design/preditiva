@@ -12,6 +12,9 @@ interface MatchCardProps {
 export default function MatchCard({ match }: MatchCardProps) {
   const { toggleFavorite, isFavorite } = useFavorites();
   const favorited = isFavorite(match.id);
+  // Odds/probabilities may be missing when only fixture data is available
+  // (e.g. no odds API key). Avoid rendering zeroed/frozen values.
+  const hasOdds = match.oddsComparison.length > 0 && match.homeOdd > 0;
 
   return (
     <div className="bg-white rounded-2xl border border-[#E2E8F0] overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 group">
@@ -67,9 +70,11 @@ export default function MatchCard({ match }: MatchCardProps) {
             ) : (
               <span className="text-[#94A3B8] font-bold text-lg sm:text-xl">VS</span>
             )}
-            <span className="text-[10px] sm:text-xs text-[#64748B] font-medium mt-2 bg-[#F1F5F9] px-2 py-0.5 rounded">
-              xG Esperado: {match.expectedGoals.toFixed(1)}
-            </span>
+            {match.expectedGoals > 0 && (
+              <span className="text-[10px] sm:text-xs text-[#64748B] font-medium mt-2 bg-[#F1F5F9] px-2 py-0.5 rounded">
+                xG Esperado: {match.expectedGoals.toFixed(1)}
+              </span>
+            )}
           </div>
 
           <div className="flex flex-col items-center gap-2 w-1/3 text-center">
@@ -80,7 +85,15 @@ export default function MatchCard({ match }: MatchCardProps) {
           </div>
         </div>
 
+        {!hasOdds && (
+          <div className="mb-2 rounded-xl bg-[#F8F9FA] border border-dashed border-[#CBD5E1] px-4 py-3 text-center">
+            <p className="text-xs font-semibold text-[#64748B]">⏳ Aguardando odds do mercado</p>
+            <p className="text-[10px] text-[#94A3B8] mt-0.5">Jogo real carregado · odds e análise da IA em breve</p>
+          </div>
+        )}
+
         {/* AI Probability Bar */}
+        {hasOdds && (
         <div className="mb-4">
           <h3 className="text-xs font-bold text-[#475569] uppercase tracking-wider flex items-center gap-1.5 mb-2">
             📊 Veredito Analítico da IA
@@ -106,8 +119,10 @@ export default function MatchCard({ match }: MatchCardProps) {
             </div>
           </div>
         </div>
+        )}
 
         {/* Odds Row */}
+        {hasOdds && (
         <div className="flex gap-2 sm:gap-3 mb-4">
           <div className="flex-1 bg-[#F8F9FA] rounded-xl p-2 sm:p-3 text-center border border-[#E2E8F0]">
             <p className="text-[10px] sm:text-xs text-[#64748B] font-medium">{match.homeTeam.shortName}</p>
@@ -122,6 +137,7 @@ export default function MatchCard({ match }: MatchCardProps) {
             <p className="text-base sm:text-lg font-extrabold text-[#0F172A]">{match.awayOdd.toFixed(2)}</p>
           </div>
         </div>
+        )}
 
         {/* Value Bet Card */}
         {match.valueBet && (
@@ -153,18 +169,22 @@ export default function MatchCard({ match }: MatchCardProps) {
         )}
 
         {/* Surebet Calculator */}
-        <SurebetCalculator
-          odds={match.oddsComparison}
-          homeShort={match.homeTeam.shortName}
-          awayShort={match.awayTeam.shortName}
-        />
+        {hasOdds && (
+          <SurebetCalculator
+            odds={match.oddsComparison}
+            homeShort={match.homeTeam.shortName}
+            awayShort={match.awayTeam.shortName}
+          />
+        )}
 
         {/* Odds Comparison Table */}
-        <OddsComparison
-          odds={match.oddsComparison}
-          homeShort={match.homeTeam.shortName}
-          awayShort={match.awayTeam.shortName}
-        />
+        {hasOdds && (
+          <OddsComparison
+            odds={match.oddsComparison}
+            homeShort={match.homeTeam.shortName}
+            awayShort={match.awayTeam.shortName}
+          />
+        )}
       </div>
     </div>
   );
