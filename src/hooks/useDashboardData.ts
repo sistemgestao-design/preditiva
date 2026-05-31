@@ -3,7 +3,7 @@ import type { Match } from '../types';
 import { fetchMatches, fetchLiveMatches, type DataSource } from '../services/api';
 
 const LIVE_POLL_MS = 30_000; // short polling for live games
-const FULL_REFRESH_MS = 5 * 60_000; // periodic full refresh
+const FULL_REFRESH_MS = 60_000; // automatic full refresh every 60s
 
 interface DashboardData {
   matches: Match[];
@@ -11,6 +11,8 @@ interface DashboardData {
   updatedAt: string;
   notice?: string;
   loading: boolean;
+  refreshing: boolean;
+  refresh: () => void;
 }
 
 // Merge live updates (score/minute/odds/status) into the current match list by id.
@@ -23,20 +25,32 @@ function mergeLive(current: Match[], live: Match[]): Match[] {
   });
 }
 
+interface InternalState {
+  matches: Match[];
+  source: DataSource;
+  updatedAt: string;
+  notice?: string;
+  loading: boolean;
+  refreshing: boolean;
+}
+
 export function useDashboardData(): DashboardData {
-  const [state, setState] = useState<DashboardData>({
+  const [state, setState] = useState<InternalState>({
     matches: [],
     source: 'fallback',
     updatedAt: new Date().toISOString(),
     loading: true,
+    refreshing: false,
   });
   const matchesRef = useRef<Match[]>([]);
+  const loadFullRef = useRef<() => Promise<void>>(async () => {});
 
-  // Initial load + periodic full refresh.
+  // Initial load + periodic full refresh (every 60s) + manual refresh.
   useEffect(() => {
     let cancelled = false;
 
     const loadFull = async () => {
+      setState((prev) => ({ ...prev, refreshing: true }));
       const res = await fetchMatches();
       if (cancelled) return;
       matchesRef.current = res.data;
@@ -46,9 +60,11 @@ export function useDashboardData(): DashboardData {
         updatedAt: res.updatedAt,
         notice: res.notice,
         loading: false,
+        refreshing: false,
       });
     };
 
+    loadFullRef.current = loadFull;
     loadFull();
     const fullTimer = setInterval(loadFull, FULL_REFRESH_MS);
     return () => {
@@ -78,5 +94,10 @@ export function useDashboardData(): DashboardData {
     };
   }, [state.matches]);
 
-  return state;
+  return {
+    ...state,
+    refresh: () => {
+      void loadFullRef.current();
+    },
+  };
 }

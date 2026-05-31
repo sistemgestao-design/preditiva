@@ -6,6 +6,7 @@ import FootballPanel from './components/FootballPanel';
 import LotteryPanel from './components/LotteryPanel';
 import AlertFeed from './components/AlertFeed';
 import StatsPanel from './components/StatsPanel';
+import CommandBar from './components/CommandBar';
 import { ThemeProvider, useTheme } from './context/ThemeContext';
 import { FavoritesProvider } from './context/FavoritesContext';
 import { storyAlerts, lotteries, feedAlerts } from './data/mockData';
@@ -15,7 +16,7 @@ import DataStatusBar from './components/DataStatusBar';
 function Dashboard() {
   const [activeTab, setActiveTab] = useState<'football' | 'lottery'>('football');
   const { theme } = useTheme();
-  const { matches, source, updatedAt, notice, loading } = useDashboardData();
+  const { matches, source, updatedAt, notice, loading, refreshing, refresh } = useDashboardData();
 
   return (
     <div className={`min-h-screen bg-grafite-900 transition-colors duration-500 ${theme === 'dark' ? 'dark' : ''}`}>
@@ -25,11 +26,14 @@ function Dashboard() {
         {/* Status da fonte de dados (ao vivo / cache / demonstração) */}
         <DataStatusBar source={source} updatedAt={updatedAt} notice={notice} loading={loading} />
 
+        {/* Painel de comando: estatísticas rápidas + botão "Analisar Jogos de Hoje" */}
+        <CommandBar matches={matches} refreshing={refreshing} onRefresh={refresh} />
+
         {/* Story Alerts - Termômetro do Dia */}
         <StoryBar alerts={storyAlerts} />
 
         {/* Divider */}
-        <div className="mx-3 sm:mx-4 h-px bg-gradient-to-r from-transparent via-[#E2E8F0] to-transparent" />
+        <div className="mx-3 sm:mx-4 h-px bg-gradient-to-r from-transparent via-grafite-600 to-transparent" />
 
         {/* Tab Switcher */}
         <TabSwitcher activeTab={activeTab} onTabChange={setActiveTab} />
@@ -42,13 +46,13 @@ function Dashboard() {
         )}
 
         {/* Divider */}
-        <div className="mx-3 sm:mx-4 my-4 h-px bg-gradient-to-r from-transparent via-[#E2E8F0] to-transparent" />
+        <div className="mx-3 sm:mx-4 my-4 h-px bg-gradient-to-r from-transparent via-grafite-600 to-transparent" />
 
         {/* Stats Panel - Performance da IA */}
         <StatsPanel />
 
         {/* Divider */}
-        <div className="mx-3 sm:mx-4 my-4 h-px bg-gradient-to-r from-transparent via-[#E2E8F0] to-transparent" />
+        <div className="mx-3 sm:mx-4 my-4 h-px bg-gradient-to-r from-transparent via-grafite-600 to-transparent" />
 
         {/* Alert Feed */}
         <AlertFeed alerts={feedAlerts} />
