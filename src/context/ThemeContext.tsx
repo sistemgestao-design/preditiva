@@ -13,10 +13,23 @@ const ThemeContext = createContext<ThemeContextType>({
 });
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setTheme] = useState<Theme>('light');
+  const [theme, setTheme] = useState<Theme>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = window.localStorage.getItem('twp-theme');
+      if (saved === 'light' || saved === 'dark') return saved;
+    }
+    return 'dark';
+  });
+
+  const toggleAndPersist = (next: Theme) => {
+    setTheme(next);
+    if (typeof window !== 'undefined') {
+      window.localStorage.setItem('twp-theme', next);
+    }
+  };
 
   const toggleTheme = () => {
-    setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
+    toggleAndPersist(theme === 'dark' ? 'light' : 'dark');
   };
 
   return (

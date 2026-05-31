@@ -8,7 +8,7 @@ export default function Header() {
     <header className="sticky top-0 z-50 bg-white border-b border-[#E2E8F0] shadow-sm">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
         <div className="flex items-center gap-3 min-w-0">
-          <div className="p-2 bg-[#E0F2FE] text-[#0284C7] rounded-lg flex-shrink-0">
+          <div className="p-2 bg-[#E0F2FE] text-[#0284C7] rounded-lg flex-shrink-0 dark:neon-border">
             <Brain className="w-6 h-6" />
           </div>
           <div className="min-w-0">
@@ -20,9 +20,9 @@ export default function Header() {
         </div>
 
         <div className="flex items-center gap-3 sm:gap-4 flex-shrink-0">
-          <span className="hidden sm:flex items-center gap-1.5 text-xs font-semibold text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-full border border-emerald-200">
+          <span className="hidden sm:flex items-center gap-1.5 text-xs font-bold text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-full border border-emerald-200 dark:neon-border-green uppercase tracking-wide">
             <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-            IA ONLINE
+            IA ONLINE <span className="hidden md:inline">[ACTIVE]</span>
           </span>
           <button
             onClick={toggleTheme}
