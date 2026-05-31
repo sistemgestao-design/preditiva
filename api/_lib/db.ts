@@ -77,7 +77,7 @@ export async function getActiveMatches(): Promise<Match[]> {
   if (!hasDatabase()) return [];
   await ensureSchema();
   const sql = db();
-  const rows = await sql<{ payload: Match }[]>`
+  const rows = await sql<{ payload: Match | string }[]>`
     SELECT payload FROM matches
     WHERE status <> 'finished'
     ORDER BY
@@ -85,7 +85,21 @@ export async function getActiveMatches(): Promise<Match[]> {
       updated_at DESC
     LIMIT 50;
   `;
-  return rows.map((r) => r.payload);
+  // Some rows may have been persisted double-encoded (a JSON string inside the
+  // jsonb column). Normalize so the API always returns Match objects.
+  return rows
+    .map((r) => {
+      const p = r.payload;
+      if (typeof p === 'string') {
+        try {
+          return JSON.parse(p) as Match;
+        } catch {
+          return null;
+        }
+      }
+      return p;
+    })
+    .filter((m): m is Match => m !== null);
 }
 
 // Expiration/cleanup: delete finished games older than 24h so the table (and the
