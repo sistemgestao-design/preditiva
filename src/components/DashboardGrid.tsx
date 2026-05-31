@@ -1,5 +1,6 @@
 import { Trophy, Radio } from 'lucide-react';
 import type { Match } from '../types';
+import TeamLogo from './TeamLogo';
 
 const HOUSE_STYLE: Record<string, { bg: string; fg: string }> = {
   Betano: { bg: '#ff6a00', fg: '#ffffff' },
@@ -89,7 +90,7 @@ export default function DashboardGrid({ matches }: { matches: Match[] }) {
           <>
             <div className="flex items-center justify-between gap-2">
               <div className="flex flex-col items-center gap-1.5 w-1/3 text-center">
-                <img src={featured.homeTeam.logo} alt={featured.homeTeam.name} className="w-12 h-12 object-contain" />
+                <TeamLogo team={featured.homeTeam} className="w-12 h-12 object-contain" />
                 <span className="text-sm font-bold text-[#0F172A] leading-tight">{featured.homeTeam.name}</span>
               </div>
               <div className="flex flex-col items-center w-1/3">
@@ -99,7 +100,7 @@ export default function DashboardGrid({ matches }: { matches: Match[] }) {
                 ) : null}
               </div>
               <div className="flex flex-col items-center gap-1.5 w-1/3 text-center">
-                <img src={featured.awayTeam.logo} alt={featured.awayTeam.name} className="w-12 h-12 object-contain" />
+                <TeamLogo team={featured.awayTeam} className="w-12 h-12 object-contain" />
                 <span className="text-sm font-bold text-[#0F172A] leading-tight">{featured.awayTeam.name}</span>
               </div>
             </div>

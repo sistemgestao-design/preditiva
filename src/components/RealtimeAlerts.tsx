@@ -1,4 +1,5 @@
 import { Activity, TrendingUp, Building2 } from 'lucide-react';
+import TeamLogo from './TeamLogo';
 
 // Brand-ish colored badge for a betting house (we have no logo assets, so we
 // approximate the reference look with small color-coded pills).
@@ -46,9 +47,8 @@ export default function RealtimeAlerts() {
           {/* Futebol — Flamengo */}
           <div className="bg-white rounded-xl border border-[#E2E8F0] border-l-4 border-l-emerald-500 p-3.5 shadow-sm">
             <div className="flex items-start gap-3">
-              <img
-                src="https://media.api-sports.io/football/teams/127.png"
-                alt="Flamengo"
+              <TeamLogo
+                team={{ name: 'Flamengo', shortName: 'FLA', logo: 'https://media.api-sports.io/football/teams/127.png' }}
                 className="w-9 h-9 object-contain shrink-0"
               />
               <div className="min-w-0 flex-1">
@@ -108,9 +108,8 @@ export default function RealtimeAlerts() {
       {/* Full-width alert: Manchester City */}
       <div className="bg-white rounded-xl border border-[#E2E8F0] border-l-4 border-l-[#0284C7] p-3.5 shadow-sm mt-3">
         <div className="flex items-start gap-3">
-          <img
-            src="https://media.api-sports.io/football/teams/50.png"
-            alt="Manchester City"
+          <TeamLogo
+            team={{ name: 'Manchester City', shortName: 'MCI', logo: 'https://media.api-sports.io/football/teams/50.png' }}
             className="w-9 h-9 object-contain shrink-0"
           />
           <div className="min-w-0 flex-1">

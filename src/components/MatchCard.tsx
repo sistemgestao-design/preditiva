@@ -1,6 +1,7 @@
 import { Heart, ArrowRight } from 'lucide-react';
 import type { Match } from '../types';
 import OddsComparison from './OddsComparison';
+import TeamLogo from './TeamLogo';
 import ProfitCalculator from './ProfitCalculator';
 import SurebetCalculator from './SurebetCalculator';
 import { useFavorites } from '../context/FavoritesContext';
@@ -57,7 +58,7 @@ export default function MatchCard({ match }: MatchCardProps) {
         <div className="flex items-center justify-between max-w-md mx-auto mb-6">
           <div className="flex flex-col items-center gap-2 w-1/3 text-center">
             <div className="w-14 h-14 sm:w-16 sm:h-16 bg-[#F8F9FA] rounded-full border border-[#E2E8F0] flex items-center justify-center shadow-inner overflow-hidden">
-              <img src={match.homeTeam.logo} alt={match.homeTeam.name} className="w-10 h-10 sm:w-12 sm:h-12 object-contain" />
+              <TeamLogo team={match.homeTeam} className="w-10 h-10 sm:w-12 sm:h-12 object-contain" />
             </div>
             <span className="font-bold text-sm sm:text-lg text-[#0F172A]">{match.homeTeam.name}</span>
           </div>
@@ -79,7 +80,7 @@ export default function MatchCard({ match }: MatchCardProps) {
 
           <div className="flex flex-col items-center gap-2 w-1/3 text-center">
             <div className="w-14 h-14 sm:w-16 sm:h-16 bg-[#F8F9FA] rounded-full border border-[#E2E8F0] flex items-center justify-center shadow-inner overflow-hidden">
-              <img src={match.awayTeam.logo} alt={match.awayTeam.name} className="w-10 h-10 sm:w-12 sm:h-12 object-contain" />
+              <TeamLogo team={match.awayTeam} className="w-10 h-10 sm:w-12 sm:h-12 object-contain" />
             </div>
             <span className="font-bold text-sm sm:text-lg text-[#0F172A]">{match.awayTeam.name}</span>
           </div>
