@@ -11,12 +11,12 @@ interface StatCard {
   label: string;
   value: string;
   Icon: typeof Zap;
-  accent: 'cyan' | 'green' | 'gold' | 'red';
+  accent: 'cyan' | 'goldgreen' | 'gold' | 'red';
 }
 
 const ACCENT: Record<StatCard['accent'], { ring: string; text: string }> = {
   cyan: { ring: 'neon-border', text: 'text-[#0284C7]' },
-  green: { ring: 'neon-border-green', text: 'text-emerald-600' },
+  goldgreen: { ring: 'neon-border-gold', text: 'text-emerald-600' },
   gold: { ring: 'neon-border-gold', text: 'text-[#B45309]' },
   red: { ring: 'neon-border-red', text: 'text-red-600' },
 };
@@ -27,7 +27,7 @@ export default function CommandBar({ matches, refreshing, onRefresh }: CommandBa
 
   const cards: StatCard[] = [
     { label: 'Jogos Analisados', value: analyzed > 0 ? String(analyzed) : '—', Icon: Zap, accent: 'cyan' },
-    { label: 'Taxa de Acerto', value: '76.1%', Icon: TrendingUp, accent: 'green' },
+    { label: 'Taxa de Acerto', value: '76.1%', Icon: TrendingUp, accent: 'goldgreen' },
     { label: 'ROI Médio', value: '+10.2%', Icon: Percent, accent: 'cyan' },
     {
       label: 'Surebets & Alertas',

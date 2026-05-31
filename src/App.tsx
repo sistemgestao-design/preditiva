@@ -1,15 +1,14 @@
 import { useState } from 'react';
 import Header from './components/Header';
-import StoryBar from './components/StoryBar';
 import TabSwitcher from './components/TabSwitcher';
 import FootballPanel from './components/FootballPanel';
 import LotteryPanel from './components/LotteryPanel';
-import AlertFeed from './components/AlertFeed';
-import StatsPanel from './components/StatsPanel';
+import RealtimeAlerts from './components/RealtimeAlerts';
+import DashboardGrid from './components/DashboardGrid';
 import CommandBar from './components/CommandBar';
 import { ThemeProvider, useTheme } from './context/ThemeContext';
 import { FavoritesProvider } from './context/FavoritesContext';
-import { storyAlerts, lotteries, feedAlerts } from './data/mockData';
+import { lotteries } from './data/mockData';
 import { useDashboardData } from './hooks/useDashboardData';
 import DataStatusBar from './components/DataStatusBar';
 
@@ -22,18 +21,21 @@ function Dashboard() {
     <div className={`min-h-screen bg-grafite-900 transition-colors duration-500 ${theme === 'dark' ? 'dark' : ''}`}>
       <Header />
 
-      <main className="max-w-5xl mx-auto pb-20 sm:pb-8 px-2 sm:px-4">
+      <main className="max-w-6xl mx-auto pb-20 sm:pb-8 px-2 sm:px-4">
         {/* Status da fonte de dados (ao vivo / cache / demonstração) */}
         <DataStatusBar source={source} updatedAt={updatedAt} notice={notice} loading={loading} />
 
         {/* Painel de comando: estatísticas rápidas + botão "Analisar Jogos de Hoje" */}
         <CommandBar matches={matches} refreshing={refreshing} onRefresh={refresh} />
 
-        {/* Story Alerts - Termômetro do Dia */}
-        <StoryBar alerts={storyAlerts} />
+        {/* Alertas em tempo real (grid de 2 colunas + surebet) */}
+        <RealtimeAlerts />
+
+        {/* Ranking ROI + Jogo em análise ao vivo */}
+        <DashboardGrid matches={matches} />
 
         {/* Divider */}
-        <div className="mx-3 sm:mx-4 h-px bg-gradient-to-r from-transparent via-grafite-600 to-transparent" />
+        <div className="mx-3 sm:mx-4 my-4 h-px bg-gradient-to-r from-transparent via-grafite-600 to-transparent" />
 
         {/* Tab Switcher */}
         <TabSwitcher activeTab={activeTab} onTabChange={setActiveTab} />
@@ -44,18 +46,6 @@ function Dashboard() {
         ) : (
           <LotteryPanel lotteries={lotteries} />
         )}
-
-        {/* Divider */}
-        <div className="mx-3 sm:mx-4 my-4 h-px bg-gradient-to-r from-transparent via-grafite-600 to-transparent" />
-
-        {/* Stats Panel - Performance da IA */}
-        <StatsPanel />
-
-        {/* Divider */}
-        <div className="mx-3 sm:mx-4 my-4 h-px bg-gradient-to-r from-transparent via-grafite-600 to-transparent" />
-
-        {/* Alert Feed */}
-        <AlertFeed alerts={feedAlerts} />
       </main>
     </div>
   );
