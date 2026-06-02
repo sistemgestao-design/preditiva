@@ -43,15 +43,15 @@ export function useDashboardData(): DashboardData {
     refreshing: false,
   });
   const matchesRef = useRef<Match[]>([]);
-  const loadFullRef = useRef<() => Promise<void>>(async () => {});
+  const loadFullRef = useRef<(force?: boolean) => Promise<void>>(async () => {});
 
   // Initial load + periodic full refresh (every 60s) + manual refresh.
   useEffect(() => {
     let cancelled = false;
 
-    const loadFull = async () => {
+    const loadFull = async (force = false) => {
       setState((prev) => ({ ...prev, refreshing: true }));
-      const res = await fetchMatches();
+      const res = await fetchMatches(force);
       if (cancelled) return;
       matchesRef.current = res.data;
       setState({
@@ -66,7 +66,10 @@ export function useDashboardData(): DashboardData {
 
     loadFullRef.current = loadFull;
     loadFull();
-    const fullTimer = setInterval(loadFull, FULL_REFRESH_MS);
+    // Automatic refresh reads the cached snapshot (force=false) so it never
+    // consumes the upstream odds quota. Wrapped so setInterval's timer id isn't
+    // passed as the `force` argument.
+    const fullTimer = setInterval(() => void loadFull(false), FULL_REFRESH_MS);
     return () => {
       cancelled = true;
       clearInterval(fullTimer);
@@ -97,7 +100,7 @@ export function useDashboardData(): DashboardData {
   return {
     ...state,
     refresh: () => {
-      void loadFullRef.current();
+      void loadFullRef.current(true);
     },
   };
 }

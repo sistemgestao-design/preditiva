@@ -15,7 +15,10 @@ import {
   expireStaleMatches,
 } from './db.js';
 
-const STALE_MS = 15 * 60 * 1000; // 15 minutes
+// When a forced refresh arrives within this window of the last write we serve
+// the cache instead of hitting the upstream APIs again — protects the free odds
+// quota from rapid repeated "Analisar Jogos de Hoje" clicks.
+const FORCE_THROTTLE_MS = 90 * 1000; // 90 seconds
 
 // Build a fresh match list straight from the upstream APIs (fixtures + odds).
 // Returns null if fixtures could not be fetched (no key or upstream failure).
@@ -29,24 +32,37 @@ export async function buildLiveMatches(): Promise<Match[] | null> {
 }
 
 // Main read path for the dashboard.
-export async function getMatches(): Promise<ApiResponse<Match[]>> {
+//
+// Quota-aware strategy: the normal (automatic) read path NEVER calls the upstream
+// odds API — it serves the snapshot persisted by the daily cron and the live
+// poll, so leaving the dashboard open with 60s auto-refresh costs zero odds
+// quota. The upstream APIs are only hit on a cold start (empty DB) or when the
+// user explicitly forces a refresh ("Analisar Jogos de Hoje"), which is throttled.
+export async function getMatches(force = false): Promise<ApiResponse<Match[]>> {
   const now = new Date().toISOString();
 
-  // 1) Serve from DB if it has reasonably fresh data.
+  // Load whatever the DB currently holds.
+  let cached: Match[] = [];
+  let updated: Date | null = null;
   if (hasDatabase()) {
     try {
-      const updated = await lastUpdatedAt();
-      const fresh = updated && Date.now() - updated.getTime() < STALE_MS;
-      const cached = await getActiveMatches();
-      if (fresh && cached.length > 0) {
-        return { data: cached, source: 'cache', updatedAt: updated!.toISOString() };
-      }
+      updated = await lastUpdatedAt();
+      cached = await getActiveMatches();
     } catch {
       // DB hiccup — fall through to live/fallback.
     }
   }
 
-  // 2) Try live upstream APIs, persist to DB if available.
+  const recentlyRefreshed = !!updated && Date.now() - updated.getTime() < FORCE_THROTTLE_MS;
+
+  // Serve cache for normal reads, and for forced reads that arrive too soon
+  // after the last refresh (throttle). Only rebuild when forced (and allowed)
+  // or on a cold start with no cached data.
+  if (cached.length > 0 && (!force || recentlyRefreshed)) {
+    return { data: cached, source: 'cache', updatedAt: (updated ?? new Date()).toISOString() };
+  }
+
+  // Rebuild a fresh snapshot from upstream (fixtures + odds) and persist it.
   try {
     const live = await buildLiveMatches();
     if (live && live.length > 0) {
@@ -63,21 +79,9 @@ export async function getMatches(): Promise<ApiResponse<Match[]>> {
     // ignore and fall back
   }
 
-  // 3) Last-resort: stale cache, then mock fallback.
-  if (hasDatabase()) {
-    try {
-      const cached = await getActiveMatches();
-      if (cached.length > 0) {
-        return {
-          data: cached,
-          source: 'cache',
-          updatedAt: now,
-          notice: 'Exibindo ultimo dado salvo (API indisponivel no momento).',
-        };
-      }
-    } catch {
-      /* ignore */
-    }
+  // Upstream failed — serve whatever cache we have, else mock fallback.
+  if (cached.length > 0) {
+    return { data: cached, source: 'cache', updatedAt: (updated ?? new Date()).toISOString() };
   }
 
   return {

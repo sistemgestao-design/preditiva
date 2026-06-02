@@ -47,8 +47,11 @@ function sanitize(data: unknown): Match[] | null {
   return valid.length > 0 ? valid : null;
 }
 
-export async function fetchMatches(): Promise<ApiResponse<Match[]>> {
-  const result = await getJson<Match[]>('/api/matches');
+export async function fetchMatches(force = false): Promise<ApiResponse<Match[]>> {
+  // A forced refresh asks the backend to rebuild from upstream, so allow a
+  // longer timeout to cover the (cold) serverless + API round-trip.
+  const url = force ? '/api/matches?refresh=1' : '/api/matches';
+  const result = await getJson<Match[]>(url, force ? 12000 : 8000);
   const clean = result ? sanitize(result.data) : null;
   if (result && clean) {
     return { ...result, data: clean };
