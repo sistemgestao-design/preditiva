@@ -145,10 +145,11 @@ export function buildPrediction(
   if (homeForm.played < 3 || awayForm.played < 3) return null;
 
   // Statistical lean: home advantage + form gap. Map to a 0–100 "home strength".
-  const HOME_ADVANTAGE = 8;
+  const HOME_ADVANTAGE = 6;
   const diff = homeForm.formScore - awayForm.formScore + HOME_ADVANTAGE;
   // Squash the diff (range roughly -100..100) into a 0–100 probability-ish lean.
-  const statHome = Math.max(5, Math.min(95, 50 + diff / 2));
+  // Slope 0.9 lets a clear form favorite (gap ~25+) reach the 70% threshold.
+  const statHome = Math.max(5, Math.min(95, 50 + diff * 0.9));
 
   // Market lean from odds (implied probabilities), when we have them.
   let marketHome: number | null = null;
