@@ -2,6 +2,7 @@ import { Heart, ArrowRight } from 'lucide-react';
 import type { Match } from '../types';
 import OddsComparison from './OddsComparison';
 import TeamLogo from './TeamLogo';
+import AnalysisPanel from './AnalysisPanel';
 import ProfitCalculator from './ProfitCalculator';
 import SurebetCalculator from './SurebetCalculator';
 import { useFavorites } from '../context/FavoritesContext';
@@ -85,6 +86,15 @@ export default function MatchCard({ match }: MatchCardProps) {
             <span className="font-bold text-sm sm:text-lg text-[#0F172A]">{match.awayTeam.name}</span>
           </div>
         </div>
+
+        {/* Predictive analysis (recent form + AI suggestion) */}
+        {match.analysis && (
+          <AnalysisPanel
+            analysis={match.analysis}
+            homeName={match.homeTeam.name}
+            awayName={match.awayTeam.name}
+          />
+        )}
 
         {!hasOdds && (
           <div className="mb-2 rounded-xl bg-[#F8F9FA] border border-dashed border-[#CBD5E1] px-4 py-3 text-center">

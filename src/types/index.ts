@@ -9,9 +9,36 @@ export interface StoryAlert {
 }
 
 export interface Team {
+  id?: number;
   name: string;
   shortName: string;
   logo: string;
+}
+
+export interface TeamForm {
+  played: number;
+  wins: number;
+  draws: number;
+  losses: number;
+  goalsFor: number;
+  goalsAgainst: number;
+  formScore: number;
+  sequence: string;
+}
+
+export interface Prediction {
+  pick: 'home' | 'draw' | 'away';
+  label: string;
+  confidence: number;
+  house: string;
+  odd: number;
+  reasoning: string;
+}
+
+export interface MatchAnalysis {
+  homeForm: TeamForm | null;
+  awayForm: TeamForm | null;
+  prediction: Prediction | null;
 }
 
 export interface Match {
@@ -37,6 +64,7 @@ export interface Match {
   awayScore?: number;
   expectedGoals: number;
   oddsComparison: BettingHouseOdd[];
+  analysis?: MatchAnalysis;
 }
 
 export interface Lottery {

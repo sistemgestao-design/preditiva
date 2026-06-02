@@ -127,8 +127,11 @@ function statusFromShort(short: string): Match['status'] {
   return 'upcoming';
 }
 
-function toTeam(t: { name: string; logo: string }): Team {
-  return { name: t.name, shortName: shortName(t.name), logo: t.logo };
+function toTeam(t: { id: number; name: string; logo: string }): Team {
+  // Serve the crest through our own /api/crest proxy so it loads on networks
+  // that block the api-sports CDN directly (hotlink/referrer protection).
+  const logo = t.id ? `/api/crest?team=${t.id}` : t.logo;
+  return { id: t.id, name: t.name, shortName: shortName(t.name), logo };
 }
 
 function mapFixture(f: AFFixture): Match {

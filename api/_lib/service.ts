@@ -1,10 +1,11 @@
 // Orchestration layer used by the serverless endpoints. Encapsulates the
 // "live → cache → fallback" strategy so every endpoint behaves consistently
 // and the UI never receives empty/broken data.
-import type { ApiResponse, Match } from './types.js';
+import type { ApiResponse, Match, TeamForm } from './types.js';
 import { fetchTodayFixtures, fetchLiveFixtures } from './apiFootball.js';
 import { fetchAllOdds } from './oddsApi.js';
 import { enrichMatches } from './merge.js';
+import { fetchTeamForm, buildPrediction } from './stats.js';
 import { fallbackMatches } from './fallback.js';
 import {
   hasDatabase,
@@ -13,7 +14,14 @@ import {
   lastUpdatedAt,
   expireFinishedMatches,
   expireStaleMatches,
+  getCachedForms,
+  saveTeamForm,
 } from './db.js';
+
+// Cap on how many NEW team-history requests we make per refresh. Each team costs
+// one API-Football request; with a 12h form cache this protects the 100/day free
+// quota even across multiple forced refreshes.
+const MAX_NEW_FORM_FETCHES = 20;
 
 // When a forced refresh arrives within this window of the last write we serve
 // the cache instead of hitting the upstream APIs again — protects the free odds
@@ -28,7 +36,55 @@ export async function buildLiveMatches(): Promise<Match[] | null> {
   const [fixtures, odds] = await Promise.all([fetchTodayFixtures(), fetchAllOdds()]);
   if (!fixtures || fixtures.length === 0) return null;
 
-  return enrichMatches(fixtures, odds ?? []);
+  const enriched = enrichMatches(fixtures, odds ?? []);
+  return enrichWithAnalysis(enriched);
+}
+
+// Attach statistical form + AI suggestion to each match. Form is read from the
+// DB cache first (12h fresh); only teams missing from the cache trigger an
+// API-Football history request, bounded by MAX_NEW_FORM_FETCHES to protect the
+// daily quota. Best-effort: any failure just leaves a match without analysis.
+export async function enrichWithAnalysis(matches: Match[]): Promise<Match[]> {
+  const ids = Array.from(
+    new Set(
+      matches.flatMap((m) => [m.homeTeam.id, m.awayTeam.id]).filter((x): x is number => !!x),
+    ),
+  );
+  if (ids.length === 0) return matches;
+
+  const forms = new Map<number, TeamForm>();
+  try {
+    const cached = await getCachedForms(ids);
+    cached.forEach((v, k) => forms.set(k, v));
+  } catch {
+    /* ignore cache read failure */
+  }
+
+  const missing = ids.filter((id) => !forms.has(id)).slice(0, MAX_NEW_FORM_FETCHES);
+  // Fetch missing forms with a small concurrency limit to respect the 30s budget.
+  const CONCURRENCY = 8;
+  for (let i = 0; i < missing.length; i += CONCURRENCY) {
+    const batch = missing.slice(i, i + CONCURRENCY);
+    const results = await Promise.all(
+      batch.map(async (id) => {
+        const form = await fetchTeamForm(id);
+        return { id, form };
+      }),
+    );
+    for (const { id, form } of results) {
+      if (form) {
+        forms.set(id, form);
+        saveTeamForm(id, form).catch(() => {});
+      }
+    }
+  }
+
+  return matches.map((m) => {
+    const homeForm = m.homeTeam.id ? forms.get(m.homeTeam.id) ?? null : null;
+    const awayForm = m.awayTeam.id ? forms.get(m.awayTeam.id) ?? null : null;
+    const prediction = buildPrediction(m, homeForm, awayForm);
+    return { ...m, analysis: { homeForm, awayForm, prediction } };
+  });
 }
 
 // Main read path for the dashboard.
