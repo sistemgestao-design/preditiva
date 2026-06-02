@@ -88,21 +88,45 @@ export async function getMatches(): Promise<ApiResponse<Match[]>> {
   };
 }
 
-// Live-only path used by short polling. Cheaper than a full refresh.
+// Live-only path used by short polling. Cheaper than a full refresh: it only
+// fetches volatile fields (score/minute/status) from API-Football and reuses the
+// odds/probabilities already computed in the last full refresh. It deliberately
+// does NOT call The Odds API — doing that every 30s would exhaust the monthly
+// quota and would also overwrite good odds with zeros for unmatched events.
 export async function getLiveMatches(): Promise<ApiResponse<Match[]>> {
   const now = new Date().toISOString();
   try {
-    const [live, odds] = await Promise.all([fetchLiveFixtures(), fetchAllOdds()]);
+    const live = await fetchLiveFixtures();
     if (live && live.length > 0) {
-      const enriched = enrichMatches(live, odds ?? []);
+      // Preserve odds/probabilities/value-bet from the cached snapshot.
+      let cachedById = new Map<number, Match>();
       if (hasDatabase()) {
         try {
-          await saveMatches(enriched);
+          const cached = await getActiveMatches();
+          cachedById = new Map(cached.map((m) => [m.id, m]));
+        } catch {
+          /* ignore — fall back to bare live fixtures */
+        }
+      }
+      const merged = live.map((lm) => {
+        const prev = cachedById.get(lm.id);
+        if (!prev) return lm;
+        return {
+          ...prev,
+          status: lm.status,
+          minute: lm.minute,
+          homeScore: lm.homeScore,
+          awayScore: lm.awayScore,
+        };
+      });
+      if (hasDatabase()) {
+        try {
+          await saveMatches(merged);
         } catch {
           /* best-effort */
         }
       }
-      return { data: enriched, source: 'live', updatedAt: now };
+      return { data: merged, source: 'live', updatedAt: now };
     }
   } catch {
     /* ignore */

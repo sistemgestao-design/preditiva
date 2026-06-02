@@ -6,11 +6,32 @@ import type { BettingHouseOdd } from './types.js';
 
 const BASE = 'https://api.the-odds-api.com/v4';
 
-// Soccer competitions on The Odds API that map to our leagues.
+// Soccer competitions we request odds for. The Odds API only charges quota for
+// competitions that are currently in season ("active"); requests for off-season
+// keys return an error and are skipped without consuming the monthly quota. So
+// we can safely list a broad set covering the year round (South America + Europe
+// + others) and only the in-season ones actually return data / count.
 const SPORT_KEYS = [
-  'soccer_uefa_champs_league',
-  'soccer_epl',
+  // South America (in season much of the year)
+  'soccer_conmebol_copa_libertadores',
+  'soccer_conmebol_copa_sudamericana',
   'soccer_brazil_campeonato',
+  'soccer_brazil_serie_b',
+  'soccer_chile_campeonato',
+  // North America / Asia / Nordics (summer season)
+  'soccer_usa_mls',
+  'soccer_japan_j_league',
+  'soccer_norway_eliteserien',
+  'soccer_sweden_allsvenskan',
+  // Europe (autumn–spring season)
+  'soccer_uefa_champs_league',
+  'soccer_uefa_europa_league',
+  'soccer_epl',
+  'soccer_spain_la_liga',
+  'soccer_spain_segunda_division',
+  'soccer_italy_serie_a',
+  'soccer_germany_bundesliga',
+  'soccer_france_ligue_one',
 ];
 
 interface OddsOutcome {
