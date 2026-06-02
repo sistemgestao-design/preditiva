@@ -115,6 +115,24 @@ export async function expireFinishedMatches(): Promise<number> {
   return result.count ?? 0;
 }
 
+// Remove stale games that were not part of a recent refresh. A fresh refresh
+// bumps updated_at to now() for every current fixture, so any non-finished row
+// that hasn't been touched in `maxAgeHours` is a leftover from a previous day
+// (e.g. an "upcoming" game whose date has passed) and should be dropped — this
+// keeps the dashboard showing only the current snapshot instead of mixing in
+// outdated fixtures.
+export async function expireStaleMatches(maxAgeHours = 6): Promise<number> {
+  if (!hasDatabase()) return 0;
+  await ensureSchema();
+  const sql = db();
+  const result = await sql`
+    DELETE FROM matches
+    WHERE status <> 'finished'
+      AND updated_at < now() - make_interval(hours => ${maxAgeHours});
+  `;
+  return result.count ?? 0;
+}
+
 // Timestamp of the most recently refreshed match (used to decide staleness).
 export async function lastUpdatedAt(): Promise<Date | null> {
   if (!hasDatabase()) return null;

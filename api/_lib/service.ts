@@ -12,6 +12,7 @@ import {
   saveMatches,
   lastUpdatedAt,
   expireFinishedMatches,
+  expireStaleMatches,
 } from './db.js';
 
 const STALE_MS = 15 * 60 * 1000; // 15 minutes
@@ -140,6 +141,12 @@ export async function refreshAll(): Promise<{
   let expired = 0;
   if (hasDatabase()) {
     expired = await expireFinishedMatches();
+    // Drop leftover games from previous days so the dashboard only shows the
+    // current snapshot (only when we actually got a fresh live set, to avoid
+    // wiping the cache during an upstream outage).
+    if (refreshed > 0) {
+      expired += await expireStaleMatches();
+    }
   }
   return { refreshed, expired, source: live ? 'live' : 'none' };
 }
