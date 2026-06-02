@@ -27,7 +27,7 @@ function hasKey(): boolean {
 
 const FINISHED = new Set(['FT', 'AET', 'PEN']);
 
-interface GameResult {
+export interface GameResult {
   result: 'W' | 'D' | 'L';
   gf: number;
   ga: number;
@@ -52,7 +52,7 @@ function toGameResults(teamId: number, fixtures: AFStatusFixture[]): GameResult[
 
 // Weighted form score in [0,100]. Recent games weigh more: the i-th game from
 // the end gets a linearly higher weight, so the last 5 dominate the result.
-function computeForm(games: GameResult[]): TeamForm {
+export function computeForm(games: GameResult[]): TeamForm {
   let wins = 0;
   let draws = 0;
   let losses = 0;

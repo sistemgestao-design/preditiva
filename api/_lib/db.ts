@@ -58,7 +58,42 @@ export async function ensureSchema(): Promise<void> {
       updated_at  TIMESTAMPTZ NOT NULL DEFAULT now()
     );
   `;
+  await sql`
+    CREATE TABLE IF NOT EXISTS kv_cache (
+      key         TEXT PRIMARY KEY,
+      data        JSONB NOT NULL,
+      updated_at  TIMESTAMPTZ NOT NULL DEFAULT now()
+    );
+  `;
   schemaReady = true;
+}
+
+// Generic JSON key/value cache with a freshness window. Returns null when the
+// key is absent or stale. Used to cache the football-data competition index so
+// we don't rebuild it (and burn the 10 req/min limit) on every refresh.
+export async function getKv<T>(key: string, maxAgeHours = 6): Promise<T | null> {
+  if (!hasDatabase()) return null;
+  await ensureSchema();
+  const sql = db();
+  const rows = await sql<{ data: T | string }[]>`
+    SELECT data FROM kv_cache
+    WHERE key = ${key} AND updated_at > now() - make_interval(hours => ${maxAgeHours});
+  `;
+  if (rows.length === 0) return null;
+  const d = rows[0].data;
+  return typeof d === 'string' ? (JSON.parse(d) as T) : d;
+}
+
+export async function setKv(key: string, data: unknown): Promise<void> {
+  if (!hasDatabase()) return;
+  await ensureSchema();
+  const sql = db();
+  await sql`
+    INSERT INTO kv_cache (key, data, updated_at)
+    VALUES (${key}, ${JSON.stringify(data)}::jsonb, now())
+    ON CONFLICT (key) DO UPDATE
+      SET data = EXCLUDED.data, updated_at = now();
+  `;
 }
 
 // Read cached team-form rows that are still fresh (within maxAgeHours). Used to

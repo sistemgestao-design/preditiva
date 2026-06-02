@@ -6,6 +6,7 @@ import { fetchTodayFixtures, fetchLiveFixtures } from './apiFootball.js';
 import { fetchAllOdds } from './oddsApi.js';
 import { enrichMatches } from './merge.js';
 import { fetchTeamForm, buildPrediction } from './stats.js';
+import { buildFormLookup, hasFootballDataKey } from './footballData.js';
 import { fallbackMatches } from './fallback.js';
 import {
   hasDatabase,
@@ -45,11 +46,13 @@ export async function buildLiveMatches(): Promise<Match[] | null> {
 // API-Football history request, bounded by MAX_NEW_FORM_FETCHES to protect the
 // daily quota. Best-effort: any failure just leaves a match without analysis.
 export async function enrichWithAnalysis(matches: Match[]): Promise<Match[]> {
-  const ids = Array.from(
-    new Set(
-      matches.flatMap((m) => [m.homeTeam.id, m.awayTeam.id]).filter((x): x is number => !!x),
-    ),
-  );
+  // Unique teams (id + name); the name is needed to match against football-data.
+  const teams = new Map<number, string>();
+  for (const m of matches) {
+    if (m.homeTeam.id) teams.set(m.homeTeam.id, m.homeTeam.name);
+    if (m.awayTeam.id) teams.set(m.awayTeam.id, m.awayTeam.name);
+  }
+  const ids = Array.from(teams.keys());
   if (ids.length === 0) return matches;
 
   const forms = new Map<number, TeamForm>();
@@ -58,6 +61,25 @@ export async function enrichWithAnalysis(matches: Match[]): Promise<Match[]> {
     cached.forEach((v, k) => forms.set(k, v));
   } catch {
     /* ignore cache read failure */
+  }
+
+  // Prefer CURRENT-season form from football-data (covered leagues). It replaces
+  // any older cached form (e.g. the API-Football season fallback). The index is
+  // built once and cached for hours, so this costs ~0 requests most of the time.
+  if (hasFootballDataKey()) {
+    try {
+      const lookup = await buildFormLookup();
+      for (const [id, name] of teams) {
+        const fd = lookup(name);
+        const cur = forms.get(id);
+        if (fd && (!cur || (cur.season ?? 0) < (fd.season ?? 0))) {
+          forms.set(id, fd);
+          saveTeamForm(id, fd).catch(() => {});
+        }
+      }
+    } catch {
+      /* ignore football-data failure; fall back below */
+    }
   }
 
   const missing = ids.filter((id) => !forms.has(id)).slice(0, MAX_NEW_FORM_FETCHES);
