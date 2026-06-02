@@ -7,15 +7,54 @@ import type { Match, Team } from './types.js';
 
 const BASE = 'https://v3.football.api-sports.io';
 
-// Leagues we care about (API-Football league IDs):
-//  2  = UEFA Champions League
-//  39 = Premier League
-//  71 = Brasileirão Série A
+// Friendly names/icons for the leagues we recognize. Unknown leagues still
+// render with their real API name (see mapFixture), so this map is only for
+// nicer labels — it does NOT restrict which games appear.
 const LEAGUES: Record<number, { name: string; icon: string }> = {
+  // International
+  1: { name: 'Copa do Mundo', icon: '🌍' },
+  4: { name: 'Eurocopa', icon: '🇪🇺' },
+  9: { name: 'Copa America', icon: '🌎' },
+  10: { name: 'Amistosos', icon: '🤝' },
+  15: { name: 'Mundial de Clubes', icon: '🏆' },
+  // European clubs
   2: { name: 'Champions League', icon: '🏆' },
+  3: { name: 'Europa League', icon: '🏆' },
+  848: { name: 'Conference League', icon: '🏆' },
   39: { name: 'Premier League', icon: '🏴' },
+  140: { name: 'La Liga', icon: '🇪🇸' },
+  135: { name: 'Serie A (ITA)', icon: '🇮🇹' },
+  78: { name: 'Bundesliga', icon: '🇩🇪' },
+  61: { name: 'Ligue 1', icon: '🇫🇷' },
+  94: { name: 'Primeira Liga', icon: '🇵🇹' },
+  88: { name: 'Eredivisie', icon: '🇳🇱' },
+  203: { name: 'Super Lig', icon: '🇹🇷' },
+  // South America
+  13: { name: 'Libertadores', icon: '🌎' },
+  11: { name: 'Sul-Americana', icon: '🌎' },
   71: { name: 'Brasileirao Serie A', icon: '🇧🇷' },
+  72: { name: 'Brasileirao Serie B', icon: '🇧🇷' },
+  73: { name: 'Copa do Brasil', icon: '🇧🇷' },
+  612: { name: 'Copa do Nordeste', icon: '🇧🇷' },
+  128: { name: 'Liga Argentina', icon: '🇦🇷' },
+  130: { name: 'Copa Argentina', icon: '🇦🇷' },
+  239: { name: 'Primera A (COL)', icon: '🇨🇴' },
+  // North America
+  253: { name: 'MLS', icon: '🇺🇸' },
+  262: { name: 'Liga MX', icon: '🇲🇽' },
 };
+
+// Preferred display order: when many games are available we show the most
+// recognizable competitions first. Leagues not listed here still appear, just
+// after the prioritized ones.
+const PRIORITY: number[] = [
+  1, 4, 9, 15, 2, 3, 848, 13, 11, 39, 140, 135, 78, 61, 71, 72, 73, 612, 94, 88,
+  203, 128, 130, 239, 253, 262, 10,
+];
+
+// Max fixtures to surface in one payload (keeps the UI focused and the odds
+// matching cheap).
+const MAX_FIXTURES = 16;
 
 interface AFFixture {
   fixture: { id: number; date: string; status: { short: string; elapsed: number | null } };
@@ -35,9 +74,25 @@ interface AFResponse {
 
 const KEY_HEADER = 'x-apisports-key';
 
-// Keep only fixtures from the leagues we track.
-function filterTracked(fixtures: AFFixture[]): AFFixture[] {
-  return fixtures.filter((f) => f.league.id in LEAGUES);
+// Choose which fixtures to surface. We prefer recognized/priority leagues, but
+// if none of them are playing (e.g. European off-season days) we fall back to
+// whatever real games the day has — so the dashboard always shows live data
+// instead of a stale cache / "API indisponivel" notice.
+function selectFixtures(fixtures: AFFixture[]): AFFixture[] {
+  const rank = (id: number) => {
+    const i = PRIORITY.indexOf(id);
+    return i === -1 ? Number.MAX_SAFE_INTEGER : i;
+  };
+  const known = fixtures.filter((f) => f.league.id in LEAGUES);
+  const pool = known.length > 0 ? known : fixtures;
+  return [...pool]
+    .sort((a, b) => {
+      const r = rank(a.league.id) - rank(b.league.id);
+      if (r !== 0) return r;
+      // Stable-ish secondary sort: by kickoff time.
+      return a.fixture.date.localeCompare(b.fixture.date);
+    })
+    .slice(0, MAX_FIXTURES);
 }
 
 // The free plan only serves a rolling date window. When a date is out of range
@@ -142,7 +197,7 @@ export async function fetchTodayFixtures(): Promise<Match[] | null> {
   }
 
   if (!Array.isArray(data.response)) return null;
-  return filterTracked(data.response).map(mapFixture);
+  return selectFixtures(data.response).map(mapFixture);
 }
 
 // Fetch currently-live fixtures (cheap, used for the live polling path).
@@ -157,7 +212,7 @@ export async function fetchLiveFixtures(): Promise<Match[] | null> {
   });
 
   if (!result.ok || !result.data || !Array.isArray(result.data.response)) return null;
-  return filterTracked(result.data.response).map(mapFixture);
+  return selectFixtures(result.data.response).map(mapFixture);
 }
 
 export { hasKey as hasApiFootballKey };
