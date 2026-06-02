@@ -24,6 +24,7 @@ export interface TeamForm {
   goalsAgainst: number;
   formScore: number;
   sequence: string;
+  season?: number;
 }
 
 export interface Prediction {

@@ -87,18 +87,31 @@ function computeForm(games: GameResult[]): TeamForm {
   return { played: n, wins, draws, losses, goalsFor, goalsAgainst, formScore, sequence };
 }
 
-// Fetch and summarize a single team's last `last` games. One API request.
-export async function fetchTeamForm(teamId: number, last = 10): Promise<TeamForm | null> {
+// Seasons to try, newest first. The API-Football free plan blocks the live
+// current season and the `last` parameter, but allows full-season fixtures for
+// 2022–2024 — so we derive recent form from the newest season the plan permits.
+const SEASONS = [2024, 2023];
+
+// Fetch and summarize a single team's most recent finished games. Uses the
+// season endpoint (free-plan compatible) and keeps the last `take` results.
+// One API request per season tried (stops at the first that returns games).
+export async function fetchTeamForm(teamId: number, take = 10): Promise<TeamForm | null> {
   if (!hasKey()) return null;
-  const url = `${BASE}/fixtures?team=${teamId}&last=${last}`;
-  const result = await fetchJson<AFFixturesResponse>(url, {
-    headers: { [KEY_HEADER]: process.env.API_FOOTBALL_KEY as string },
-    timeoutMs: 5000,
-  });
-  if (!result.ok || !result.data || !Array.isArray(result.data.response)) return null;
-  const games = toGameResults(teamId, result.data.response);
-  if (games.length === 0) return null;
-  return computeForm(games);
+  for (const season of SEASONS) {
+    const url = `${BASE}/fixtures?team=${teamId}&season=${season}`;
+    const result = await fetchJson<AFFixturesResponse>(url, {
+      headers: { [KEY_HEADER]: process.env.API_FOOTBALL_KEY as string },
+      timeoutMs: 6000,
+    });
+    if (!result.ok || !result.data || !Array.isArray(result.data.response)) continue;
+    const games = toGameResults(teamId, result.data.response);
+    if (games.length === 0) continue;
+    // toGameResults sorts oldest→newest; keep the most recent `take`.
+    const form = computeForm(games.slice(Math.max(0, games.length - take)));
+    form.season = season;
+    return form;
+  }
+  return null;
 }
 
 const CONFIDENCE_THRESHOLD = 70;

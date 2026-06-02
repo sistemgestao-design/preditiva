@@ -20,6 +20,8 @@ export interface TeamForm {
   formScore: number;
   // Compact recent sequence, most recent last, e.g. "V V E D V".
   sequence: string;
+  // Season the sample was drawn from (free plan caps at the latest closed season).
+  season?: number;
 }
 
 // AI-style suggestion produced from statistical form (+ market odds when known).

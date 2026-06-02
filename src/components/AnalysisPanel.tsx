@@ -73,10 +73,17 @@ export default function AnalysisPanel({ analysis, homeName, awayName }: Props) {
   // Nothing useful to show.
   if (!homeForm && !awayForm && !prediction) return null;
 
+  const season = homeForm?.season ?? awayForm?.season;
+
   return (
     <div className="mb-4 rounded-2xl border border-[#E2E8F0] bg-white p-3 sm:p-4 dark:neon-border">
       <h3 className="text-xs font-bold text-[#475569] uppercase tracking-wider flex items-center gap-1.5 mb-3">
         <Brain className="w-4 h-4 text-[#0284C7]" /> Análise Preditiva da IA
+        {season && (
+          <span className="ml-auto normal-case tracking-normal text-[10px] font-medium text-[#94A3B8]">
+            Base: temporada {season}
+          </span>
+        )}
       </h3>
 
       <div className="flex items-stretch gap-2 sm:gap-3">
