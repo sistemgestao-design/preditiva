@@ -6,7 +6,7 @@
 // a standard Postgres endpoint — the @vercel/postgres Neon driver talks to a
 // Neon proxy over fetch and fails against Supabase ("fetch failed").
 import postgres from 'postgres';
-import type { Match } from './types.js';
+import type { Match, TeamForm } from './types.js';
 
 // Prefer the pooled connection (transaction pooler, port 6543) which is the
 // right choice for short-lived serverless invocations; fall back to the direct
@@ -51,7 +51,84 @@ export async function ensureSchema(): Promise<void> {
     );
   `;
   await sql`CREATE INDEX IF NOT EXISTS matches_status_idx ON matches (status);`;
+  await sql`
+    CREATE TABLE IF NOT EXISTS team_form (
+      team_id     BIGINT PRIMARY KEY,
+      data        JSONB NOT NULL,
+      updated_at  TIMESTAMPTZ NOT NULL DEFAULT now()
+    );
+  `;
+  await sql`
+    CREATE TABLE IF NOT EXISTS kv_cache (
+      key         TEXT PRIMARY KEY,
+      data        JSONB NOT NULL,
+      updated_at  TIMESTAMPTZ NOT NULL DEFAULT now()
+    );
+  `;
   schemaReady = true;
+}
+
+// Generic JSON key/value cache with a freshness window. Returns null when the
+// key is absent or stale. Used to cache the football-data competition index so
+// we don't rebuild it (and burn the 10 req/min limit) on every refresh.
+export async function getKv<T>(key: string, maxAgeHours = 6): Promise<T | null> {
+  if (!hasDatabase()) return null;
+  await ensureSchema();
+  const sql = db();
+  const rows = await sql<{ data: T | string }[]>`
+    SELECT data FROM kv_cache
+    WHERE key = ${key} AND updated_at > now() - make_interval(hours => ${maxAgeHours});
+  `;
+  if (rows.length === 0) return null;
+  const d = rows[0].data;
+  return typeof d === 'string' ? (JSON.parse(d) as T) : d;
+}
+
+export async function setKv(key: string, data: unknown): Promise<void> {
+  if (!hasDatabase()) return;
+  await ensureSchema();
+  const sql = db();
+  await sql`
+    INSERT INTO kv_cache (key, data, updated_at)
+    VALUES (${key}, ${JSON.stringify(data)}::jsonb, now())
+    ON CONFLICT (key) DO UPDATE
+      SET data = EXCLUDED.data, updated_at = now();
+  `;
+}
+
+// Read cached team-form rows that are still fresh (within maxAgeHours). Used to
+// avoid re-spending the API-Football daily quota on history we already have.
+export async function getCachedForms(
+  ids: number[],
+  maxAgeHours = 12,
+): Promise<Map<number, TeamForm>> {
+  const map = new Map<number, TeamForm>();
+  if (!hasDatabase() || ids.length === 0) return map;
+  await ensureSchema();
+  const sql = db();
+  const rows = await sql<{ team_id: number; data: TeamForm | string }[]>`
+    SELECT team_id, data FROM team_form
+    WHERE team_id IN ${sql(ids)}
+      AND updated_at > now() - make_interval(hours => ${maxAgeHours});
+  `;
+  for (const r of rows) {
+    const d = typeof r.data === 'string' ? (JSON.parse(r.data) as TeamForm) : r.data;
+    map.set(Number(r.team_id), d);
+  }
+  return map;
+}
+
+// Persist a team's computed form (upsert, refreshing updated_at).
+export async function saveTeamForm(teamId: number, form: TeamForm): Promise<void> {
+  if (!hasDatabase()) return;
+  await ensureSchema();
+  const sql = db();
+  await sql`
+    INSERT INTO team_form (team_id, data, updated_at)
+    VALUES (${teamId}, ${JSON.stringify(form)}::jsonb, now())
+    ON CONFLICT (team_id) DO UPDATE
+      SET data = EXCLUDED.data, updated_at = now();
+  `;
 }
 
 // Upsert the current set of matches. Used by the cron refresh job.
